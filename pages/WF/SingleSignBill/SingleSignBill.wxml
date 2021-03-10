@@ -1,0 +1,1855 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<wxs module="tools">
+    var signInfoShow = function(name,sign_info_name) { 
+    var res=false         
+    if (sign_info_name == name)
+        res = true;
+    if (sign_info_name != undefined && sign_info_name.indexOf(name) != -1)
+        res = true;
+    return res;
+    }
+    module.exports = {
+        signInfoShow: signInfoShow,
+    }
+</wxs>
+<view class="m-20">
+    <van-field
+        value="{{ sign_comment }}"
+        label="审批意见"
+        type="textarea"
+        placeholder="请输入审批意见"
+        autosize
+        border="{{ false }}"
+        show-word-limit="{{true}}"
+        maxlength="200"
+        autosize="{ maxHeight: 250, minHeight: 150 }"
+        bind:input="onSignComment"
+    />
+    <van-row gutter="10" custom-class="mt-20">
+    <van-col span="12"><van-button color="#198fff"  block size="small"  bind:tap="goSignBill" data-item="approve">同意</van-button></van-col>
+    <van-col span="12"><van-button color="#999" block size="small"  bind:tap="goSignBill" data-item="reject">拒绝</van-button></van-col>
+    </van-row>
+</view>
+<view class="work-list  container">
+    <view class="title font-28 c-198fff  line2 bor-b">签核信息</view>
+    <view wx:for="{{signUserList}}" wx:key="index" class="step-list bg-fff font-24 c-999 container" >
+        <van-row >
+            <van-col span="16" offset="2" custom-class="c-333">
+                <span class="c-333 d-block"> {{item.emp_name}} </span>                
+            </van-col>
+            <van-col span="6"  custom-class="text-right"><text class="c-198fff">{{item.status_desc}}</text></van-col>
+            <van-col span="22" offset="2" custom-class="font-20">{{filter.formatTime(item.sign_date)}}</van-col>
+        </van-row>
+        <view class="circle-container"><text class="step-circle {{item.status=='A'?'active':''}}">{{item.sign_order_no}}</text></view>
+        <view class="step-line {{item.status=='A'?'active':''}}"></view>
+    </view>  
+</view>
+<view class="work-list  container">
+    <view class="title font-28 c-198fff  line2 bor-b">单据信息</view>
+    <block wx:if="{{tools.signInfoShow('人事奖惩',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                姓名:{{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">
+                部门名称:{{dtMaster.dept_name}}
+            </van-col>
+            <van-col span="12" >奖惩类别:{{dtMaster.processing_type}}</van-col>
+            <van-col span="12">奖惩细项:{{dtMaster.processing_name}}</van-col>
+            <van-col span="12" >奖惩描述:{{dtMaster.processing_desc}}</van-col>
+            <van-col span="12" >见证人姓名:{{dtMaster.witness_confirm_emp_name}}</van-col>
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+        </van-row>
+    </block>   
+    
+    <block wx:elif="{{tools.signInfoShow('人事异动',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                姓名:{{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">
+                申请日期:{{filter.formatTime(dtMaster.apply_date,'yyyy-MM-dd')}}
+            </van-col>
+            <van-col span="12" >异动前部门名称:{{dtMaster.old_dept_name}}</van-col>
+            <van-col span="12">异动前职称:{{dtMaster.old_title}}</van-col>
+            <van-col span="12" >异动前职等:{{dtMaster.old_grade}}</van-col>
+            <van-col span="12" >异动前职务:{{dtMaster.old_responsibility}}</van-col>
+            <van-col span="12" >异动后部门名称:{{dtMaster.new_dept_name}}</van-col>
+            <van-col span="12" >异动后职称:{{dtMaster.new_title}}</van-col>
+            <van-col span="12" >异动后职等:{{dtMaster.new_grade}}</van-col>
+            <van-col span="12" >异动后职务:{{dtMaster.new_responsibility}}</van-col>
+            <van-col span="12" >生效日期:{{filter.formatTime(dtMaster.plan_effective_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >异动类型:{{dtMaster.transaction_type}}</van-col>
+            <van-col span="12" >异动描述:{{dtMaster.transaction_desc}}</van-col>
+            <van-col span="12" >备注:{{dtMaster.remark}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('客户联系人签核',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                客户:{{dyModel.customer_name}}
+            </van-col>
+            <van-col span="12">
+                变更类型:{{dtMaster.change_category}}
+            </van-col>
+            <block wx:if="{{dtMaster.customer_contact_id!=null?true:false}}">
+                <van-col span="24" >变更理由:{{dtMaster.change_reason}}</van-col>
+                <van-col span="12">变更文件:<span class="c-2071FF">下载</span></van-col>
+            </block>
+        </van-row>
+         <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex" >
+            <view class="table-title">联系人信息</view>
+            <view class="row-table font-24 text-center" >
+                <view class="thead">
+                    <view class="th">联系人抬头</view>
+                    <view class="th" >姓名</view>
+                    <view class="th" >证件编号</view>
+                    <view class="th" >证件类型</view>
+                    <view class="th" >电话</view>
+                    <view class="th" >手机地区</view>
+                    <view class="th" >手机</view>
+                    <view class="th" >邮箱</view>
+                    <view class="th" >股份比例（%）</view>
+                    <view class="th" >备注</view>
+                </view>
+                <view class="tr">
+                    <view class="td" >{{dtModel.title}}</view>
+                    <view class="td" >{{dtModel.name}}</view>
+                    <view class="td" >{{dtModel.id_no}}</view>
+                    <view class="td">{{dtModel.id_type}}</view>
+                    <view class="td">{{dtModel.mp}}</view>
+                    <view class="td">{{dtModel.mp_place_category}}</view>
+                    <view class="td">{{dtModel.phone}}</view>
+                    <view class="td">{{dtModel.mail}}</view>
+                    <view class="td">{{dtModel.share_proportion}}</view>
+                    <view class="td">{{dtModel.remark}}</view>
+                </view>
+                
+            </view>
+        </scroll-view>
+        <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex" >
+            <view class="table-title">联系人变更信息</view>
+            <view class="row-table font-24 text-center" >
+                <view class="thead">
+                    <view>联系人抬头</view>
+                    <view>姓名</view>
+                    <view>证件编号</view>
+                    <view>证件类型</view>
+                    <view>电话</view>
+                    <view>手机地区</view>
+                    <view>手机</view>
+                    <view>邮箱</view>
+                    <view>股份比例（%）</view>
+                    <view>备注</view>
+                </view>
+                <view class="tr">
+                    <view class="td">{{dtMaster.title}}</view>
+                    <view class="td">{{dtMaster.name}}</view>
+                    <view class="td">{{dtMaster.id_no}}</view>
+                    <view class="td">{{dtMaster.id_type}}</view>
+                    <view class="td">{{dtMaster.mp}}</view>
+                    <view class="td">{{dtMaster.mp_place_category}}</view>
+                    <view class="td">{{dtMaster.phone}}</view>
+                    <view class="td">{{dtMaster.mail}}</view>
+                    <view class="td">{{dtMaster.share_proportion}}</view>
+                    <view class="td">{{dtMaster.remark}}</view>
+                </view>
+            
+            </view>
+        </scroll-view>
+         <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex" >
+            <view class="table-title">邮件群组</view>
+            <view class="row-table font-24 text-center" >
+                <view class="viewead">
+                    <view class="th">客户名称</view>
+                    <view class="th">群组名称</view>
+                    <view class="th">群组描述</view>
+                    <view class="th">发送分类</view>
+                    <view class="th">是否有效</view>
+                </view>
+                <view class="tr" wx:for="{{dtList}}" wx:key="index" >
+                    <view class="td">{{item.customer_name}}</view>
+                    <view class="td">{{item.group_name}}</view>
+                    <view class="td">{{item.group_desc}}</view>
+                    <view class="td">{{item.sent_category}}</view>
+                    <view class="td"><van-switch checked="{{ item.enabled }}" bind:change="onChange" /></view>
+                </view>
+                
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('快递签核',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请人:{{dtMaster.apply_user_name}}
+            </van-col>
+            <van-col span="12">
+                申请日期:{{filter.formatTime(dtMaster.apply_date,'yyyy-MM-dd')}}
+            </van-col>
+            <van-col span="24" >申请描述: {{dtMaster.request_desc}}</van-col>
+            <van-col span="12">快递物品: {{dtMaster.express_goods}}</van-col>
+            <van-col span="12" >付款方式:{{dtMaster.paid_meviewod}}</van-col>
+            <van-col span="24" >收件单位:  {{dtMaster.express_corp_name}}</van-col>
+            <van-col span="24" >快递地址: {{dtMaster.express_address}}</van-col>
+            <van-col span="12" >快递联系人:  {{dtMaster.express_contact_name}}</van-col>
+            <van-col span="12" >快递电话: {{dtMaster.express_contact_phone}}</van-col>
+            <van-col span="12" >寄件人公司: {{dtMaster.sender_corp}}</van-col>
+            <van-col span="12" >寄件人姓名: {{dtMaster.sender_name}}</van-col>
+            <van-col span="12" >寄件人地址: {{dtMaster.sender_address}}</van-col>
+            <van-col span="12" >寄件人电话: {{dtMaster.sender_phone}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('代理点申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                销售人员: {{dtMaster.sales_user_name}}
+            </van-col>
+            <van-col span="12">
+                代理公司全称: {{dtMaster.agent_full_name}}
+            </van-col>
+            <van-col span="24" >代理公司简称:  {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12">增值返税税比例:   {{dtMaster.ap_vat_ratio}}</van-col>
+            <van-col span="12" >企业所得税返税比例:{{dtMaster.ap_operation_tax_ratio}}</van-col>
+            <van-col span="24" >个人所得税返税比例:   {{dtMaster.ap_income_tax_ratio}}</van-col>
+            <van-col span="24" >代理点返税文件: <span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >代理点提成文件:  <span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >申请日期: {{ filter.formatTime(dtMaster.creation_date,'yyyy-MM-dd')}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('资产变更申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                资产变更号码: {{dtMaster.asset_transfer_master_no}}
+            </van-col>
+            <van-col span="12">
+                转移类型: {{dtMaster.transfer_type}}
+            </van-col>
+            <van-col span="24" >资产描述:  {{dtMaster.transfer_desc}}</van-col>
+            <van-col span="24">备注:   {{dtMaster.remark}}</van-col>
+        </van-row>
+        <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">资产名称</view>
+                    <view class="th">资产图片</view>
+                    <view class="th">转移类型</view>
+                    <view class="th">从员工工号</view>
+                    <view class="th">从员工姓名</view>
+                    <view class="th">到员工工号</view>
+                    <view class="th">到员工姓名</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.asset_name}}</view>
+                    <view class="td">
+                    <van-image width="50" height="34" src="{{item.asset_img}}" />
+                    </view>
+                    <view class="td">{{item.transfer_type}}</view>
+                    <view class="td">{{item.from_emp_no}}</view>
+                    <view class="td">{{item.from_emp_name}}</view>
+                    <view class="td">{{item.to_emp_no}}</view>
+                    <view class="td">{{item.to_emp_name}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('请假申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                姓名:{{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">
+                班次名称:{{dtMaster.duty_name}}
+            </van-col>
+            <van-col span="24" >理由:{{dtMaster.reason}}</van-col>
+            <van-col span="12">日期类型:工作日</van-col>
+            <van-col span="12" >假别名称:{{dtMaster.absent_name}}</van-col>
+            <van-col span="12" >代理人名称:{{dtMaster.agent_emp_name}}</van-col>
+            <van-col span="24" >申请时间:{{filter.formatTime(dtMaster.creation_date,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="24" >请假开始日期:{{filter.formatTime(dtMaster.plan_date_fm,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_fm}}:{{dtMaster.plan_time_mm_fm}}</van-col>
+            <van-col span="24" >请假结束日期:{{filter.formatTime(dtMaster.plan_date_to,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_to}}:{{dtMaster.plan_time_mm_to}}</van-col>
+            <van-col span="12" >请假小时数:{{dtMaster.plan_hours}}</van-col>
+            
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>                  
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('订单取消',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                订单号码:{{dtMaster.order_no}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24" >订单描述:{{dtMaster.order_desc}}</van-col>
+            <van-col span="12">业务人员:{{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12" >招商来源:{{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >代理点: {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12" >法人:{{dtMaster.legal_person}}</van-col>
+            <van-col span="12" >预付款金额:{{dtMaster.need_pre_paid_money}}</van-col>
+            <van-col span="12" >订单金额: {{dtMaster.order_amount}}</van-col>
+            <van-col span="12" >折扣金额:{{dtMaster.discount_amount}}</van-col>
+            <van-col span="12" >需要支付金额: {{dtMaster.need_pay_amount}}</van-col>  
+            <van-col span="12" >已收款:{{dtMaster.received_amt}}</van-col>                  
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('订单退款',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                订单号码:{{dtMaster.order_no}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24" >订单描述: {{dtMaster.order_desc}}</van-col>
+            <van-col span="12">业务人员: {{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12" >招商来源: {{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >代理点: {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12" >法人: {{dtMaster.legal_person}}</van-col>
+            <van-col span="12" >预付款金额: {{dtMaster.need_pre_paid_money}}</van-col>
+            <van-col span="12" >订单金额: {{dtMaster.order_amount}}</van-col>
+            <van-col span="12" >折扣金额: {{dtMaster.discount_amount}}</van-col>
+            <van-col span="12" >需要支付金额: {{dtMaster.need_pay_amount}}</van-col>  
+            <van-col span="12" >已收款: {{dtMaster.received_amt}}</van-col>  
+            <van-col span="12" >退款金额: {{dtMaster.refund_total_amount}}</van-col>
+            <van-col span="24" >退款用户姓名: {{dtMaster.refund_apply_user_name}}</van-col>
+            <van-col span="24" >退款申请时间: {{dtMaster.refund_apply_time}}</van-col>  
+            <van-col span="24" >退款理由: {{dtMaster.refund_reason}}</van-col>                  
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">服务类别</view>
+                    <view class="th">费用类别</view>
+                    <view class="th">价格描述</view>
+                    <view class="th">付款数量</view>
+                    <view class="th">服务价格</view>
+                    <view class="th">服务周期</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">原付款价格</view>
+                    <view class="th">折扣价格</view>
+                    <view class="th">付款价格</view>
+                    <view class="th">退款价格</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index" >
+                    <view class="td">{{item.service_category=="M" ? "零星":"代理"}}</view>
+                    <view class="td">{{item.updated_by}}</view>
+                    <view class="td">{{item.price_desc}}</view>
+                    <view class="td">{{item.service_qty}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{item.original_payment_price}}</view>
+                    <view class="td">{{item.discount_payment_price}}</view>
+                    <view class="td">{{item.payment_price}}</view>
+                    <view class="td">{{item.refund_price}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('订单终止',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                订单号码:{{dtMaster.order_no}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24" >订单描述: {{dtMaster.order_desc}}</van-col>
+            <van-col span="12">业务人员: {{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12" >招商来源: {{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >代理点: {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12" >法人: {{dtMaster.legal_person}}</van-col>
+            <van-col span="12" >预付款金额: {{dtMaster.need_pre_paid_money}}</van-col>
+            <van-col span="12" >订单金额: {{dtMaster.order_amount}}</van-col>
+            <van-col span="12" >折扣金额: {{dtMaster.discount_amount}}</van-col>
+            <van-col span="12" >需要支付金额: {{dtMaster.need_pay_amount}}</van-col>  
+            <van-col span="12" >已收款: {{dtMaster.received_amt}}</van-col>  
+            <van-col span="12" >终止未收金额: {{dtMaster.terminate_total_amount}}</van-col>
+            <van-col span="12" >终止用户姓名: {{dtMaster.terminate_apply_user_name}}</van-col>
+            <van-col span="12" >终止申请时间: {{dtMaster.terminate_apply_time}}</van-col>  
+            <van-col span="12" >终止理由: {{dtMaster.terminate_reason}}</van-col>                  
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">服务类别</view>
+                    <view class="th">费用类别</view>
+                    <view class="th">价格描述</view>
+                    <view class="th">付款数量</view>
+                    <view class="th">服务价格</view>
+                    <view class="th">服务周期</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">原付款价格</view>
+                    <view class="th">折扣价格</view>
+                    <view class="th">付款价格</view>
+                    <view class="th">终止未收价格</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.service_category=="M" ? "零星":"代理"}}</view>
+                    <view class="td">{{item.updated_by}}</view>
+                    <view class="td">{{item.price_desc}}</view>
+                    <view class="td">{{item.service_qty}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{item.original_payment_price}}</view>
+                    <view class="td">{{item.discount_payment_price}}</view>
+                    <view class="td">{{item.payment_price}}</view>
+                    <view class="td">{{item.terminate_price}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('订单核准',sign_info_name) || tools.signInfoShow('0金额订单核准',sign_info_name)}}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                订单号码:{{dtMaster.order_no}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24" >订单描述: {{dtMaster.order_desc}}</van-col>
+            <van-col span="12">业务人员: {{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12" >招商来源: {{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >代理点: {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12" >法人: {{dtMaster.legal_person}}</van-col>
+            <van-col span="12" >预付款金额: {{dtMaster.need_pre_paid_money}}</van-col>
+            <van-col span="12" >订单金额: {{dtMaster.order_amount}}</van-col>
+            <van-col span="12" >折扣金额: {{dtMaster.discount_amount}}</van-col>
+            <van-col span="12" >需要支付金额: {{dtMaster.need_pay_amount}}</van-col>  
+            <van-col span="12" >已收款: {{dtMaster.received_amt}}</van-col>  
+            <van-col span="12" >主订单: {{dtMaster.follow_order_no}}</van-col>
+            <van-col span="24" >订单备注: {{dtMaster.remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex">
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">服务类别</view>
+                    <view class="th">服务分类</view>
+                    <view class="th">服务名称</view>
+                    <view class="th">价格描述</view>
+                    <view class="th">付款数量</view>
+                    <view class="th">付款价格</view>
+                    <view class="th">服务周期</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">服务限定类别</view>
+                    <view class="th">服务限定次数</view>
+                    <view class="th">是否提成</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">原服务价格</view>
+                    <view class="th">原付款价格</view>
+                    <view class="th">折扣价格</view>
+                    <view class="th">退款金额</view>
+                    <view class="th">终止未收金额</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.service_category=="M" ? "零星":"代理"}}</view>
+                    <view class="td">{{item.item_service_category}}</view>
+                    <view class="td">{{item.service_name}}</view>
+                    <view class="td">{{item.price_desc}}</view>
+                    <view class="td">{{item.service_qty}}</view>
+                    <view class="td">{{item.payment_price}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{item.service_limit_category}}</view>
+                    <view class="td">{{item.service_limit_to}}</view>
+                    <view class="td">{{item.is_commission}}</view>
+                    <view class="td">{{item.commission_category}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.original_payment_price}}</view>
+                    <view class="td">{{item.discount_payment_price}}</view>
+                    <view class="td">{{item.refund_price}}</view>
+                    <view class="td">{{item.terminate_price}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>     
+    <block wx:elif="{{tools.signInfoShow('订单特批',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                订单号码:{{dtMaster.order_no}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24" >订单描述: {{dtMaster.order_desc}}</van-col>
+            <van-col span="12">业务人员: {{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12" >招商来源: {{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >代理点: {{dtMaster.agent_short_name}}</van-col>
+            <van-col span="12" >法人: {{dtMaster.legal_person}}</van-col>
+            <van-col span="12" >预付款金额: {{dtMaster.need_pre_paid_money}}</van-col>
+            <van-col span="12" >订单金额: {{dtMaster.order_amount}}</van-col>
+            <van-col span="12" >折扣金额: {{dtMaster.discount_amount}}</van-col>
+            <van-col span="12" >需要支付金额: {{dtMaster.need_pay_amount}}</van-col>  
+            <van-col span="12" >已收款: {{dtMaster.received_amt}}</van-col>  
+            <van-col span="12" >特批申请用户姓名: {{dtMaster.defer_payment_apply_user_name}}</van-col>
+            <van-col span="12" >特批申请时间: {{dtMaster.defer_payment_apply_time}}</van-col>
+            <van-col span="12" >特批理由: {{dtMaster.defer_payment_reason}}</van-col>  
+        </van-row>
+      
+    </block>
+    <block wx:elif="{{tools.signInfoShow('服务单核准',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333 ">
+                企业注册地:{{dtMaster.enterprise_registered_address}}
+            </van-col>
+            <van-col span="24">
+                公司名称:{{dtMaster.is_foreign_capital}}
+            </van-col>
+            <van-col span="24" >注册资本(万元): {{dtMaster.enterprise_registered_capital}}</van-col>
+            <van-col span="24">经营地地址: {{dtMaster.enterprise_premises_address}}</van-col>
+            <van-col span="12" >查名名称: {{dtMaster.checkname_name}}</van-col>
+            <van-col span="12" >企业类型: {{dtMaster.enterprise_type}}</van-col>
+            <van-col span="12" >法人: {{dtMaster.legal_person_name}}</van-col>
+            <van-col span="12" >股东: {{dtMaster.contacts_name}}</van-col>
+            <van-col span="12" >服务区域: {{dtMaster.service_area}}</van-col>
+            <van-col span="12" >备选名称: {{dtMaster.alternative_name}}</van-col>
+            <van-col span="12" >经营范围: {{dtMaster.business_scope}}</van-col>  
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex">
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">人员类别</view>
+                    <view class="th">姓名</view>
+                    <view class="th">签约邮箱</view>
+                    <view class="th">固定电话</view>
+                    <view class="th">手机</view>
+                    <view class="th">证件类型</view>
+                    <view class="th">证件号码</view>
+                    <view class="th">身份证地址</view>
+                    <view class="th">证件扫描正面</view>
+                    <view class="th">证件扫描反面</view>
+                    <view class="th">出资金额（万元）</view>
+                    <view class="th">出资比例（%）</view>
+                    <view class="th">出资时间</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.contact_type}}</view>
+                    <view class="td">{{item.contact_name}}</view>
+                    <view class="td">{{item.contact_mail}}</view>
+                    <view class="td">{{item.contact_mp}}</view>
+                    <view class="td">{{item.contact_phone}}</view>
+                    <view class="td">{{item.id_type}}</view>
+                    <view class="td">{{item.id_number}}</view>
+                    <view class="td">{{item.contact_address}}</view>
+                    <view class="td">
+                        <van-image width="50" height="34" src="{{item.id_number_copy_front}}" />
+                    </view>
+                    <view class="td">
+                        <van-image width="50" height="34" src="{{item.id_number_copy_back}}" />
+                    </view>
+                    <view class="td">{{item.subscribed_capital_contribution_amount}}</view>
+                    <view class="td">{{item.subscribed_capital_contribution_ratio}}</view>                       
+                    <view class="td">{{filter.formatTime(item.subscribed_capital_contribution_time,'yyyy-MM-dd')}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('前置订单退款',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                前置订单号码: {{dtMaster.pre_order_no}}
+            </van-col>
+            <van-col span="12">
+                产品名称: {{dtMaster.product_name}}
+            </van-col>
+            <van-col span="12" >下单用户:  {{dtMaster.sales_user_name}}</van-col>
+            <van-col span="12">销售用户:   {{dtMaster.order_sales_user_name}}</van-col>
+            <van-col span="12" >服务用户:{{dtMaster.service_user_name}}</van-col>
+            <van-col span="24" >付款时间:   {{filter.formatTime(dtMaster.full_paid_time,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="24" >付款金额: {{dtMaster.need_pay_amount}}</van-col>
+            <van-col span="12" >优惠券金额:  {{dtMaster.coupon_amount}}</van-col>
+            <van-col span="12" >产品信息: {{dtMaster.pre_product_price_value}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+            <van-col span="12" >退款金额: {{dtMaster.refund_amount}}</van-col>
+            <van-col span="12" >退款申请用户: {{dtMaster.refund_apply_user_name}}</van-col>
+            <van-col span="24" >退款申请时间: {{dtMaster.refund_apply_time}}</van-col>
+            <van-col span="24" >退款理由: {{filter.formatTime(dtMaster.refund_apply_reason,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+
+        </van-row>
+    </block>
+     <block wx:elif="{{tools.signInfoShow('文具申请',sign_info_name) }}">
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">申请人姓名</view>
+                    <view class="th">类型</view>
+                    <view class="th">文具名称</view>
+                    <view class="th">申请数量</view>
+                    <view class="th">单位</view>
+                    <view class="th">价格</view>
+                    <view class="th">图片</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.emp_name}}</view>
+                    <view class="td">{{item.category}}</view>
+                    <view class="td">{{item.name}}</view>
+                    <view class="td">{{item.apply_qty}}</view>
+                    <view class="td">{{item.unit}}</view>
+                    <view class="td">{{item.price}}</view>
+                    <view class="td">
+                        <van-image width="50" height="34" src="{{item.picture}}" />
+                    </view>
+                    
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+     <block wx:elif="{{tools.signInfoShow('文具作业',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                单据号:{{dtMaster.bill_master_no}}
+            </van-col>
+            <van-col span="12">
+                单据描述:{{dtMaster.bill_master_desc}}
+            </van-col>
+            <van-col span="24" >申请人: {{dtMaster.bill_user_name}}</van-col>
+            <van-col span="12">申请时间: {{filter.formatTime(dtMaster.transaction_date,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>
+            
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">文具名称</view>
+                    <view class="th">数量</view>
+                    <view class="th">单价</view>
+                    <view class="th">单位</view>
+                    <view class="th">文具类型</view>
+                    <view class="th">文具编号</view>
+                    <view class="th">文具状态</view>
+                    <view class="th">储位</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.name}}</view>
+                    <view class="td">{{item.qty}}</view>
+                    <view class="td">{{item.price}}</view>
+                    <view class="td">{{item.unit}}</view>
+                    <view class="td">{{item.category}}</view>
+                    <view class="td">{{item.stationery_no}}</view>
+                    <view class="td">{{item.stationery_status}}</view>
+                    <view class="td">{{item.location_no}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('人事代理减免申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                客户姓名: {{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                减免分类: {{dtMaster.deduct_category}}
+            </van-col>
+            <van-col span="12" >减免数据:  {{dtMaster.deduct_data}}</van-col>
+            <van-col span="12">开始月份:   {{dtMaster.start_month}}</van-col>
+            <van-col span="12" >结束月份:{{dtMaster.end_month}}</van-col>
+            <van-col span="24" >减免理由:   {{dtMaster.deduct_reason}}</van-col>
+            <van-col span="24" >申请人: {{dtMaster.apply_user_name}}</van-col>
+            <van-col span="12" >申请日期:  {{filter.formatTime(dtMaster.creation_date,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="12" >减免文件: <span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('优惠券申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                客户姓名: {{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                优惠券名称: {{dtMaster.coupon_name}}
+            </van-col>
+            <van-col span="12" >申请数量:  {{dtMaster.apply_qty}}</van-col>
+            <van-col span="12">申请人:   {{dtMaster.apply_user_name}}</van-col>
+            <van-col span="12" >申请日期:{{filter.formatTime(dtMaster.creation_date,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="24" >申请理由:   {{dtMaster.apply_reason}}</van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('派工转移',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                客户信息:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">负责人员: {{dtMaster.cs_user_name}}</van-col>
+            <van-col span="24">
+               <span class="d-l-block"> 服务内容:</span><rich-text nodes="{{dtMaster.service_content}}" class="d-l-block"></rich-text>
+            </van-col>
+             <van-col span="12" >总服务收入: {{dtMaster.total_income}}</van-col>
+            <van-col span="12" >安排时间: {{filter.formatTime(dtMaster.cs_arrange_time,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="12" >开工时间: {{filter.formatTime(dtMaster.cs_start_date,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="12" >完工时间: {{filter.formatTime(dtMaster.cs_end_time,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="12" >零星收入: {{dtMaster.misc_income}}</van-col>
+            <van-col span="12" >代收代付费用: {{dtMaster.proxy_cost}}</van-col>
+            <van-col span="12" >服务补贴: {{dtMaster.service_allowance}}</van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>  
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">转出负责人姓名</view>
+                    <view class="th">转出备注</view>
+                    <view class="th">转出时间</view>
+                    <view class="th">转入负责人姓名</view>
+                    <view class="th">转入备注</view>
+                    <view class="th">转入时间</view>
+                    <view class="th">备注</view>
+                    <view class="th">创建人</view>
+                    <view class="th">创建时间</view>
+                </view>
+                <view class="tr">
+                    <view class="td">{{dtModel.from_in_charge_user_name}}</view>
+                    <view class="td">{{dtModel.from_remark}}</view>
+                    <view class="td">{{filter.formatTime(dtModel.from_time,'yyyy-MM-dd hh:mm:ss')}}</view>
+                    <view class="td">{{dtModel.to_in_charge_user_name}}</view>
+                    <view class="td">{{dtModel.to_remark}}</view>
+                    <view class="td">{{filter.formatTime(dtModel.to_time,'yyyy-MM-dd hh:mm:ss')}}</view>
+                    <view class="td">{{dtModel.remark}}</view>
+                    <view class="td">{{dtModel.created_by}}</view>
+                    <view class="td">{{filter.formatTime(dtModel.creation_date,'yyyy-MM-dd hh:mm:ss')}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('加班申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                姓名: {{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">
+                班次名称: {{dtMaster.duty_name}}
+            </van-col>
+            <van-col span="12" >加班类别:  {{dtMaster.duty_cat}}</van-col>
+            <van-col span="12">日期类型:  {{dtMaster.duty_type_name}}</van-col>
+            <van-col span="12" >申请时间: {{filter.formatTime(dtMaster.apply_date)}}</van-col>
+            <van-col span="24" >加班开始日期:  {{filter.formatTime(dtMaster.plan_date_fm,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_fm}}:{{dtMaster.plan_time_mm_fm==null?"00":dtMaster.plan_time_mm_fm}}</van-col>
+            <van-col span="24" >加班结束日期: {{filter.formatTime(dtMaster.plan_date_to,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_to}}:{{dtMaster.plan_time_mm_to==null?"00":dtMaster.plan_time_mm_to}}</van-col>
+            <van-col span="12">加班小时数:  {{dtMaster.plan_hours}}</van-col>
+            <van-col span="24" >原因: {{dtMaster.reason}}</van-col>
+            <van-col span="24" >备注:   {{dtMaster.remark}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('销假作业',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                【销假】姓名: {{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">
+                【销假】班次名称: {{dtMaster.duty_name}}
+            </van-col>
+            <van-col span="12" >日期类型:  工作日</van-col>
+             <van-col span="12" >假别名称:{{dtMaster.absent_name}}</van-col>
+            <van-col span="24">理由:   {{dtMaster.reason}}</van-col>
+            <van-col span="12" >代理人姓名:   {{dtMaster.agent_emp_name}}</van-col>
+            <van-col span="12" >申请时间: {{filter.formatTime(dtMaster.return_apply_date,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="24">【计划】开始日期:   {{filter.formatTime(dtMaster.plan_date_fm,'yyyy-MM-dd') }} {{dtMaster.plan_time_hh_fm}}:{{dtMaster.plan_time_mm_fm==null?"00":dtMaster.plan_time_mm_fm }}</van-col>
+            <van-col span="24" >【计划】结束日期:{{filter.formatTime( dtMaster.plan_date_to,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_to}}:{{dtMaster.plan_time_mm_to==null?"00":dtMaster.plan_time_mm_to }}</van-col>
+            <van-col span="24" >【计划】小时数:   {{dtMaster.plan_hours}}</van-col>
+            <van-col span="24">【实际】开始日期:   {{filter.formatTime(dtMaster.act_date_fm,'yyyy-MM-dd') }} {{dtMaster.act_hh_fm}}:{{dtMaster.act_mm_fm==null?"00":dtMaster.act_mm_fm }}</van-col>
+            <van-col span="24" >【实际】结束日期:{{filter.formatTime(dtMaster.act_date_to,'yyyy-MM-dd')}} {{dtMaster.act_hh_to}}:{{dtMaster.act_mm_to==null?"00":dtMaster.act_mm_to }}</van-col>
+            <van-col span="24" >【实际】小时数:   {{dtMaster.act_hours}}</van-col>
+            
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('外出申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                姓名:{{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">班次名称: {{dtMaster.duty_name}}</van-col>
+            <van-col span="24">
+                日期类型:工作日
+            </van-col>
+             <van-col span="12" >理由: {{dtMaster.reason}}</van-col>
+            <van-col span="12" >假别名称: {{dtMaster.absent_name}}</van-col>
+            <van-col span="12" >代理人姓名: {{dtMaster.agent_emp_name}}</van-col>
+            <van-col span="12" >申请日期: {{filter.formatTime(dtMaster.apply_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >公出开始日期: {{filter.formatTime(dtMaster.plan_date_fm,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_fm}}:{{dtMaster.plan_time_mm_fm}}</van-col>
+            <van-col span="12" >公出结束日期: {{filter.formatTime(dtMaster.plan_date_to,'yyyy-MM-dd')}} {{dtMaster.plan_time_hh_to}}:{{dtMaster.plan_time_mm_to}}</van-col>
+            <van-col span="12" >公出小时数: {{dtMaster.plan_hours}}</van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>  
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('借款申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                姓名:{{dtMaster.emp_name}}
+            </van-col>
+            <van-col span="12">部门: {{dtMaster.app_dept_name}}</van-col>
+            <van-col span="24">
+                公司: {{dtMaster.company}}
+            </van-col>
+             <van-col span="12" >借款金额: {{dtMaster.loan_amount}}</van-col>
+            <van-col span="12" >借款理由: {{dtMaster.loan_reason}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+           
+        </van-row>
+         <scroll-view scroll-x="true"  style=" white-space: nowrap; display: flex">
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">单据类型</view>
+                    <view class="th">申请数量</view>
+                    <view class="th">申请单价</view>
+                    <view class="th">申请金额</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.app_bill_type=='PR'?'有实物':'无实物'}}</view>
+                    <view class="td">{{item.app_bill_qty}}</view>
+                    <view class="td">{{item.app_bill_unit_price}}</view>
+                    <view class="td">{{item.app_bill_amount}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('零星采购',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                供应商名称:{{dtMaster.vendor_name}}
+            </van-col>
+            <van-col span="12">联系人: {{dtMaster.vendor_contact_name}}</van-col>
+            <van-col span="24">
+                联系人电话:{{dtMaster.vendor_contact_phone}}
+            </van-col>
+             <van-col span="12" >联系人地址: {{dtMaster.vendor_contact_address}}</van-col>
+            <van-col span="12" >总金额: {{dtMaster.total_order_amt}}</van-col>
+            <van-col span="12" >总数量: {{dtMaster.total_order_qty}}</van-col>
+            <van-col span="12" >税务代码: {{dtMaster.tax_code}}</van-col>
+            <van-col span="12" >税务值: {{dtMaster.tax_value}}</van-col>
+            <van-col span="12" >申请用户: {{dtMaster.submit_user}}</van-col>
+            <van-col span="12" >申请日期: {{filter.formatTime(dtMaster.submit_date,'yyyy-MM-dd hh:mm')}}</van-col>
+            <van-col span="12" >采购单类型: {{dtMaster.misc_po_type}}</van-col>  
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">申请费用描述</view>
+                    <view class="th">规格</view>
+                    <view class="th">描述</view>
+                    <view class="th">单位</view>
+                    <view class="th">数量</view>
+                    <view class="th">单价</view>
+                    <view class="th">总价</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.apply_desc}}</view>
+                    <view class="td">{{item.item_spec}}</view>
+                    <view class="td">{{item.item_desc}}</view>
+                    <view class="td">{{item.item_unit}}</view>
+                    <view class="td">{{item.item_qty}}</view>
+                    <view class="td">{{item.item_price}}</view>
+                    <view class="td">{{item.item_total_amt}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+     <block wx:elif="{{tools.signInfoShow('零星收入',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333 ">
+                申请用户:{{dtMaster.name}}
+            </van-col>
+            <van-col span="12">收入分类: {{dtMaster.bill_category}}</van-col>
+            <van-col span="12">
+                付款公司:{{dtMaster.company}}
+            </van-col>
+             <van-col span="12" >申请类型描述: {{dtMaster.parent_type_desc}}</van-col>
+            <van-col span="12" >付款联系人: {{dtMaster.contact_person}}</van-col>
+            <van-col span="12" >理由: {{dtMaster.reason}}</van-col>
+            <van-col span="12" >收入总金额: {{dtMaster.total_income}}</van-col>
+            <van-col span="12" >备注: {{dtMaster.remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">申请类型</view>
+                    <view class="th">规格</view>
+                    <view class="th">描述</view>
+                    <view class="th">单位</view>
+                    <view class="th">数量</view>
+                    <view class="th">单价</view>
+                    <view class="th">总价</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.child_type_desc}}</view>
+                    <view class="td">{{item.item_spec}}</view>
+                    <view class="td">{{item.item_desc}}</view>
+                    <view class="td">{{item.item_unit}}</view>
+                    <view class="td">{{item.item_qty}}</view>
+                    <view class="td">{{item.item_price}}</view>
+                    <view class="td">{{item.total_amount}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('付款申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请日期:{{filter.formatTime(dtMaster.app_date,'yyyy-MM-dd hh:mm')}}
+            </van-col>
+            <van-col span="12">
+                申请部门:{{dtMaster.app_dept_name}}
+            </van-col>
+            <van-col span="12" >申请人: {{dtMaster.app_emp_name}}</van-col>
+            <van-col span="12">供应商名称: {{dtMaster.vendor_name}}</van-col>
+            <van-col span="12" >付款对象姓名: {{dtMaster.payto_emp_name}}</van-col>
+            <van-col span="12" >总金额: {{dtMaster.total_amount}}</van-col>
+            <van-col span="12" >发票数量: {{dtMaster.invoice_qty}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+                           
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">付款申请明细</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">单据类型</view>
+                    <view class="th">申请数量</view>
+                    <view class="th">付款申请单价</view>
+                    <view class="th">付款申请数量</view>
+                    <view class="th">付款申请金额</view>
+                    <view class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.app_bill_type=="PA"?"无实物":"有实物"}}</view>
+                    <view class="td">{{item.app_bill_qty}}</view>
+                    <view class="td">{{item.pay_unit_price}}</view>
+                    <view class="td">{{item.pay_qty}}</view>
+                    <view class="td">{{item.pay_amount}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+        <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">付款发票明细</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">发票号码</view>
+                    <view class="th">发票金额</view>
+                    <view class="th">发票描述</view>
+                    <view class="th">发票日期</view>
+                    <view class="th">税代码</view>
+                    <view class="th">税百分比</view>
+                    <view class="th">税金额</view>
+                    <view class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtList}}" wx:key="index">
+                    <view class="td">{{item.invoice_no}}</view>
+                    <view class="td">{{item.invoice_amount}}</view>
+                    <view class="td">{{item.invoice_desc}}</view>
+                    <view class="td">{{filter.formatTime(item.invocie_date,'yyyy-MM-dd')}}</view>
+                    <view class="td">{{item.tax_code}}</view>
+                    <view class="td">{{item.tax_value}}</view>
+                    <view class="td">{{item.tax_amount}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('还款申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请日期:{{filter.formatTime(dtMaster.app_date,'yyyy-MM-dd hh:mm')}}
+            </van-col>
+            <van-col span="12">
+                申请部门:{{dtMaster.app_dept_name}}
+            </van-col>
+            <van-col span="12" >申请人: {{dtMaster.app_emp_name}}</van-col>
+            <van-col span="12">公司: {{dtMaster.company}}</van-col>
+            <van-col span="12" >还款人员: {{dtMaster.return_emp_name}}</van-col>
+            <van-col span="12" >还款金额: {{dtMaster.total_amount}}</van-col>
+            <van-col span="12" >退还原币金额: {{dtMaster.return_amount}}</van-col>
+            <van-col span="12" >发票数量: {{dtMaster.invoice_qty}}</van-col>
+            <van-col span="12" >金额: {{dtMaster.account_amt}}</van-col>
+            <van-col span="12" >处理人员工姓名: {{dtMaster.account_emp_name}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+                           
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">还款明细</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">单据类型</view>
+                    <view class="th">申请数量</view>
+                    <view class="th">申请单价</view>
+                    <view class="th">申请金额</view>
+                    <view class="th">此次还款金额</view>
+                    <view class="th">此次剩余还款金额</view>
+                    <view class="th">剩余退还金额</view>
+                    <view class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.app_bill_type=="PA"?"无实物":"有实物"}}</view>
+                    <view class="td">{{item.app_bill_qty}}</view>
+                    <view class="td">{{item.app_bill_unit_price}}</view>
+                    <view class="td">{{item.app_bill_amount}}</view>
+                    <view class="td">{{item.return_amount}}</view>
+                    <view class="td">{{item.return_balance}}</view>
+                    <view class="td">{{item.loan_balance}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+        
+    </block>
+    <block wx:elif="{{tools.signInfoShow('特殊考勤',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                工号:{{dtMaster.worker_id}}
+            </van-col>
+            <van-col span="12">
+                姓名:{{dtMaster.name}}
+            </van-col>
+            <van-col span="12" >刷卡日期: {{filter.formatTime(dtMaster.card_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">刷卡时间: {{dtMaster.card_time_hh_fm}}:{{dtMaster.card_time_mm_fm}}</van-col>
+            <van-col span="12" >刷卡类别: {{dtMaster.card_type=="A"?"上班":"下班"}}</van-col>
+            <van-col span="24" >原因: {{dtMaster.reason}}</van-col>
+        </van-row>
+        
+    </block>
+    <block wx:elif="{{tools.signInfoShow('客户服务',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">客户名称:{{dtMaster.customer_name}}</van-col>
+            <van-col span="12">服务开始月份:{{filter.formatTime(dtMaster.service_month_from,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >服务结束月份: {{filter.formatTime(dtMaster.service_month_to,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">服务进入申请人: {{dtMaster.enter_user_name}}</van-col>
+            <van-col span="12" >服务进入时间: {{filter.formatTime(dtMaster.enter_submit_time,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="24" >服务进入备注: {{dtMaster.enter_remark}}</van-col>
+            <van-col span="12">服务退出申请人:{{dtMaster.quit_user_name}}</van-col>
+            <van-col span="12" >服务退出时间: {{filter.formatTime(dtMaster.quit_submit_time,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="24">服务退出理由: {{dtMaster.quit_reason}}</van-col>
+            <van-col span="12" >服务退出月份: {{filter.formatTime(dtMaster.quit_service_month,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >服务退出文件: <span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >服务类型: {{dtMaster.service_item_category}}</van-col>
+            <van-col span="12" >签核信息: {{dtMaster.entityName}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                合约编号:{{dtMaster.contract_no}}
+            </van-col>
+            <van-col span="12">
+                合约名称:{{dtMaster.contract_name}}
+            </van-col>
+            <van-col span="12" >客户信息: {{dtMaster.customer_name}}</van-col>
+            <van-col span="12">合约业务员: {{dtMaster.contract_sales_name}}</van-col>
+            <van-col span="12" >合约公司签约人: {{dtMaster.contract_corp_sign_name}}</van-col>
+            <van-col span="12" >合约客户签约人: {{dtMaster.contract_customer_sign_name}}</van-col>
+            <van-col span="24" >合约描述: {{dtMaster.contract_desc}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+            <van-col span="12" >合约分类: {{dtMaster.contract_category}}</van-col>
+            <van-col span="12">合同是否自动展期: {{dtMaster.is_auto_extension==true?'是':'否'}}</van-col>
+            <van-col span="24" >签约日期: {{filter.formatTime(dtMaster.contract_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="24" >合约终止日期: {{filter.formatTime(dtMaster.contract_terminate_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >合同服务开始月份: {{filter.formatTime(dtMaster.contract_month_fm,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">合同服务结束月份: {{filter.formatTime(dtMaster.contract_month_to,'yyyy-MM-dd')}}</van-col>
+            <van-col span="24" >合约终止理由: {{dtMaster.contract_terminate_reason}}</van-col>
+            <van-col span="12" >是否有效: {{dtMaster.enabled==true?'是':'否'}}</van-col>
+                           
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">合约服务</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">服务类别</view>
+                    <view class="th">服务名称</view>
+                    <view  class="th">服务价格</view>
+                    <view  class="th">实际价格</view>
+                    <view  class="th">服务周期</view>
+                    <view  class="th">价格描述</view>
+                    <view  class="th">付款周期</view>
+                    <view  class="th">是否服务限定</view>
+                    <view  class="th">服务限定类型</view>
+                    <view  class="th">服务开始数</view>
+                    <view  class="th">服务结束数</view>
+                    <view  class="th">服务开始月份</view>
+                    <view  class="th">服务结束月份</view>
+                    <view  class="th">实际开始数</view>
+                    <view  class="th">实际结束数</view>
+                    <view  class="th">本次付款服务到期月份</view>
+                    <view  class="th">本次付款金额</view>
+                    <view  class="th">下次服务付款到期月份</view>
+                    <view  class="th">下次付款金额</view>
+                    <view  class="th">上次付款月份</view>
+                    <view  class="th">上次付款金额</view>
+                    <view  class="th">是否阶梯价格</view>
+                    <view  class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.service_category}}</view>
+                    <view class="td">{{item.service_name}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.actual_price}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.price_desc}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{item.is_service_limit==true?'是':'否'}}</view>
+                    <view class="td">{{item.service_limit_category}}</view>
+                    <view class="td">{{item.service_limit_fm}}</view>
+                    <view class="td">{{item.service_limit_to}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_from,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_to,'yyyy-MM')}}</view>
+                    <view class="td">{{item.actual_service_limit_fm}}</view>
+                    <view class="td">{{item.actual_service_limit_to}}</view>
+                    <view class="td">{{filter.formatTime(item.curr_payment_month,'yyyy-MM')}}</view>
+                    <view class="td">{{item.curr_payment_amount}}</view>
+                    <view class="td">{{filter.formatTime(item.next_payment_month,'yyyy-MM')}}</view>
+                    <view class="td">{{item.next_payment_amount}}</view>
+                    <view class="td">{{filter.formatTime(item.last_payment_month,'yyyy-MM')}}</view>
+                    <view class="td">{{item.last_payment_amount}}</view>
+                    <view class="td">{{item.is_multi_step_price==true?'是':'否'}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+        <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">合约文件</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">文件名称</view>
+                    <view class="th">文件地址</view>
+                    <view class="th">有效开始日期</view>
+                    <view class="th">有效结束日期</view>
+                    <view class="th">是否有效</view>
+                    <view class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtList}}" wx:key="index">
+                    <view class="td">{{item.file_name}}</view>
+                    <view class="td"> {{item.file_add}}</view>
+                    <view class="td">{{filter.formatTime(item.effective_date_fm,'yyyy-MM-dd')}}</view>
+                    <view class="td">{{ filter.formatTime(item.effective_date_to,'yyyy-MM-dd')}}</view>
+                    <view class="td">{{item.enabled==true?'是':'否'}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约调整',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                调整文件: <span class="c-2071FF">下载</span>
+            </van-col>
+            <van-col span="12">
+                调整理由:{{dtMaster.adjsutment_reason}}
+            </van-col>
+            <van-col span="12" >状态: {{dtMaster.status}}</van-col>
+            <van-col span="12">客服核准: {{dtMaster.approved_user_name}}-{{dtMaster.approved_time}}</van-col>
+            <van-col span="12" >财务核准: {{dtMaster.auditor_user_name}}-{{dtMaster.auditor_time}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+            <van-col span="24" >客服核准备注: {{dtMaster.approved_remark}}</van-col>
+            <van-col span="24" >财务核准备注: {{dtMaster.auditor_remark}}</van-col>
+            <van-col span="12" >合约编号:{{dtMaster.contract_no}}</van-col>
+            <van-col span="12">合约名称:{{dtMaster.contract_name}}</van-col>
+            <van-col span="12" >客户信息: {{dtMaster.customer_name}}</van-col>
+            <van-col span="12">合约业务员: {{dtMaster.contract_sales_name}}</van-col>
+            <van-col span="12" >合约公司签约人: {{dtMaster.contract_corp_sign_name}}</van-col>
+            <van-col span="12" >合约客户签约人: {{dtMaster.contract_customer_sign_name}}</van-col>
+            <van-col span="12" >合约描述: {{dtMaster.contract_desc}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+            <van-col span="12" >合约分类: {{dtMaster.contract_category}}</van-col>
+            <van-col span="12">合同是否自动展期: {{dtMaster.is_auto_extension==true?'是':'否'}}</van-col>
+            <van-col span="12" >签约日期: {{filter.formatTime(dtMaster.contract_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >合约终止日期: {{filter.formatTime(dtMaster.contract_terminate_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >合同服务开始月份: {{filter.formatTime(dtMaster.contract_month_fm,'yyyy-MM')}}</van-col>
+            <van-col span="12">合同服务结束月份: {{filter.formatTime(dtMaster.contract_month_to,'yyyy-MM')}}</van-col>
+            <van-col span="12" >合约终止理由: {{dtMaster.contract_terminate_reason}}</van-col>
+            <van-col span="12" >是否有效: {{dtMaster.enabled?'是':'否'}}</van-col>
+                           
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">合约服务</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                
+                    <view  class="th">调整分类</view>
+                    <view class="th">服务类别</view>
+                    <view class="th">服务名称</view>
+                    <view class="th">服务价格</view>
+                    <view class="th">实际价格</view>
+                    <view class="th">服务周期</view>
+                    <view class="th">价格描述</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">是否服务限定</view>
+                    <view class="th">服务限定类型</view>
+                    <view class="th">服务开始数</view>
+                    <view class="th">服务结束数</view>
+                    <view class="th">服务开始月份</view>
+                    <view class="th">服务结束月份</view>
+                    <view class="th">实际开始数</view>
+                    <view class="th">实际结束数</view>
+                    <view class="th">本次付款服务到期月份</view>
+                    <view class="th">本次付款金额</view>
+                    <view class="th">下次服务付款到期月份</view>
+                    <view class="th">下次付款金额</view>
+                    <view class="th">上次付款月份</view>
+                    <view class="th">上次付款金额</view>
+                    <view class="th">是否阶梯价格</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.service_category}}</view >
+                    <view class="td">{{item.service_name}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.actual_price}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.price_desc}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{item.is_service_limit==true?'是':'否'}}</view>
+                    <view class="td">{{item.service_limit_category}}</view>
+                    <view class="td">{{item.service_limit_fm}}</view>
+                    <view class="td">{{item.service_limit_to}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_from,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_to,'yyyy-MM')}}</view>
+                    <view class="td">{{item.actual_service_limit_fm}}</view>
+                    <view class="td">{{item.actual_service_limit_to}}</view>
+                    <view class="td">{{filter.formatTime(item.curr_payment_month ,'yyyy-MM')}}</view>
+                    <view class="td">{{item.curr_payment_amount}}</view>
+                    <view class="td">{{filter.formatTime(item.next_payment_month ,'yyyy-MM')}}</view>
+                    <view class="td">{{item.next_payment_amount}}</view>
+                    <view class="td">{{filter.formatTime(item.last_payment_month ,'yyyy-MM')}}</view>
+                    <view class="td">{{item.last_payment_amount}}</view>
+                    <view class="td">{{item.is_multi_step_price==true?'是':'否'}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+        <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="font-24 text-333">合约文件</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">文件名称</view>
+                    <view class="th">文件地址</view>
+                    <view class="th">有效开始日期</view>
+                    <view class="th">有效结束日期</view>
+                    <view class="th">是否有效</view>
+                    <view class="th">备注</view>
+                  
+                </view>
+                <view class="tr" wx:for="{{dtList}}" wx:key="index">
+                    <view class="td">{{item.file_name}}</view>
+                    <view class="td"> {{item.file_add}}</view>
+                    <view class="td">{{filter.formatTime(item.effective_date_fm,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.effective_date_to,'yyyy-MM')}}</view>
+                    <view class="td">{{item.enabled?'是':'否'}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约中止',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                客户信息: {{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                中止文件:<span class="c-2071FF">下载</span>
+            </van-col>
+            <van-col span="12" >中止理由: {{dtMaster.end_reason}}</van-col>
+            <van-col span="24">中止日期: {{filter.formatTime(dtMaster.end_date,'yyyy-MM')}}</van-col>
+            <van-col span="12" >状态: {{dtMaster.status}}</van-col>
+            <van-col span="12" >客服核准: {{dtMaster.approved_user_name}}-{{dtMaster.approved_time}}</van-col>
+            <van-col span="12" >财务核准: {{dtMaster.auditor_user_name}}-{{dtMaster.auditor_time}}</van-col>
+            <van-col span="24" >备注: {{dtMaster.remark}}</van-col>
+            <van-col span="24" >核准备注:{{dtMaster.approved_remark}}</van-col>
+            <van-col span="24">财务核准备注:{{dtMaster.auditor_remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex">
+            <view class="font-24 text-333">合约服务</view>
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">合约编号</view>
+                    <view class="th">合约名称</view>
+                    <view class="th">合约描述</view>
+                    <view class="th">合约分类</view>
+                    <view class="th">合同是否自动展期</view>
+                    <view class="th">签约日期</view>
+                    <view class="th">合同服务开始月份</view>
+                    <view class="th">合同服务结束月份</view>
+                    <view class="th">合约终止日期</view>
+                    <view class="th">合约终止理由</view>
+                    <view class="th">合约业务员姓名</view>
+                    <view class="th">合约公司签约人姓名</view>
+                    <view class="th">合约客户签约人姓名</view>
+                    <view class="th">是否有效</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.contract_no}}</view>
+                    <view class="td">{{item.contract_name}}</view>
+                    <view class="td">{{item.contract_desc}}</view>
+                    <view class="td">{{item.contract_category}}</view>
+                    <view class="td">{{item.is_auto_extension==true?'是':'否'}}</view>
+                    <view class="td">{{filter.formatTime(item.contract_date,'yyyy-MM-dd')}}</view>
+                    <view class="td">{{filter.formatTime(item.contract_month,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.contract_month,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.contract_terminate_date,'yyyy-MM-dd')}}</view>
+                    <view class="td">{{item.contract_terminate_reason}}</view>
+                    <view class="td">{{item.contract_sales_name}}</view>
+                    <view class="td">{{item.contract_corp_sign_name}}</view>
+                    <view class="td">{{item.contract_customer_sign_name}}</view>
+                    <view class="td">{{item.enabled==true?'是':'否'}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('委托服务收入',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+             <span class="d-l-block"> 服务内容:</span><rich-text nodes="{{dtMaster.service_content}}" class="d-l-block"></rich-text>
+            </van-col>
+            <van-col span="12">
+                付款类别:{{dtMaster.payment_type}}
+            </van-col>
+            <van-col span="12" >客户信息: {{dtMaster.customer_name}}</van-col>
+            <van-col span="12">收入月份: {{dtMaster.income_period}}</van-col>
+            <van-col span="12" >总服务收入: {{dtMaster.total_income}}</van-col>
+            <van-col span="24" >减免金额: {{dtMaster.deduct_amt}}</van-col>
+            <van-col span="24" >核准收款金额: {{dtMaster.approved_amount}}</van-col>
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+            <van-col span="12" >状态: {{dtMaster.status}}</van-col>
+            <van-col span="12">文件:<span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >税种:{{dtMaster.tax_type}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">合约名称</view>
+                    <view class="th">合约编号</view>
+                    <view class="th">服务分类</view>
+                    <view class="th">服务名称</view>
+                    <view class="th">服务价格</view>
+                    <view class="th">实际价格</view>
+                    <view class="th">实际开始数</view>
+                    <view class="th">实际结束数</view>
+                    <view class="th">服务周期</view>
+                    <view class="th">付款周期</view>
+                    <view class="th">服务开始月份</view>
+                    <view class="th">服务结束月份</view>
+                    <view class="th">是否中止</view>
+                    <view class="th">服务月数</view>
+                    <view class="th">服务金额</view>
+                    <view class="th">调整理由</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.created_by}}</view>
+                    <view class="td">{{item.updated_by}}</view>
+                    <view class="td">{{item.service_category}}</view>
+                    <view class="td">{{item.service_name}}</view>
+                    <view class="td">{{item.service_price}}</view>
+                    <view class="td">{{item.actual_price}}</view>
+                    <view class="td">{{item.actual_service_limit_fm}}</view>
+                    <view class="td">{{item.actual_service_limit_to}}</view>
+                    <view class="td">{{item.service_period}}</view>
+                    <view class="td">{{item.payment_period}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_fm,'yyyy-MM')}}</view>
+                    <view class="td">{{filter.formatTime(item.service_month_to,'yyyy-MM')}}</view>
+                    <view class="td">{{item.is_terminated}}</view>
+                    <view class="td">{{item.service_month}}</view>
+                    <view class="td">{{item.service_amount}}</view>
+                    <view class="td">{{item.adjust_reason}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('系统权限申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请用户: {{dtMaster.app_user_name}}
+            </van-col>
+            <van-col span="12">
+                被申请用户:{{dtMaster.app_for_user_name}}
+            </van-col>
+            <van-col span="12" >申请理由: {{dtMaster.app_reason}}</van-col>
+            <van-col span="12">申请分类: {{dtMaster.app_category}}</van-col>
+            <van-col span="12" >是否时间限制: {{dtMaster.is_time_limit==true?'是':'否'}}</van-col>
+            <van-col span="24" >开始时间: {{filter.formatTime(dtMaster.right_begin_time,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="24" >结束时间: {{filter.formatTime(dtMaster.right_end_time,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">角色名称</view >
+                    <view class="th">角色代码</view >
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.role_name}}</view>
+                    <view class="td">{{item.role_code}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('一户一档返税比例签核',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                公司名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24">
+                企业所得税比例:{{dtMaster.enterprise_income_tax_ratio}}
+            </van-col>
+            <van-col span="24" >生成经营个税比例:{{dtMaster.operration_income_tax_ratio}}</van-col>
+            <van-col span="12">增值税比例:{{dtMaster.vat_ratio}}</van-col>
+            <van-col span="12" >签过文件:<span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >开始月份:{{filter.formatTime(dtMaster.from_month,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="12" >结束月份:{{filter.formatTime(dtMaster.to_month,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="24" >申请人:{{dtMaster.created_by}}</van-col>
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>                  
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('客户开票权限申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                客户联系人:{{dtMaster.name}}
+            </van-col>
+            <van-col span="12" >申请类别:{{dtMaster.apply_category}}</van-col>
+            <van-col span="12">申请用户:{{dtMaster.apply_user_name}}</van-col>
+            <van-col span="12" >申请号码:{{dtMaster.apply_no}}</van-col>
+            <van-col span="12" >申请理由:{{dtMaster.apply_reason}}</van-col>
+            <van-col span="12" >申请文件:<span class="c-2071FF">下载</span></van-col>
+            <van-col span="24" >状态:{{dtMaster.status}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('费用申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请人姓名:{{dtMaster.app_emp_name}}
+            </van-col>
+            <van-col span="24">
+                申请时间:{{filter.formatTime(dtMaster.apply_date,'yyyy-MM-dd HH:mm')}}
+            </van-col>
+            <van-col span="24" >需求时间:{{filter.formatTime(dtMaster.require_date,'yyyy-MM-dd HH:mm')}}</van-col>
+            <van-col span="12">申请类型:{{dtMaster.parent_type_desc}}</van-col>
+            <van-col span="12" >申请部门:{{dtMaster.app_dept_name}}</van-col>
+            <van-col span="12" >申请金额:{{dtMaster.app_total_amt}}</van-col>
+            <van-col span="12" >申请理由:{{dtMaster.reason}}</van-col>
+            <van-col span="24" >申请备注:{{dtMaster.remark}}</van-col>
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">申请类型</view>
+                    <view class="th">规格</view>
+                    <view class="th">描述</view>
+                    <view class="th">单位</view>
+                    <view class="th">数量</view>
+                    <view class="th">单价</view>
+                    <view class="th">总价</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.child_type_desc}}</view>
+                    <view class="td">{{item.item_spec}}</view>
+                    <view class="td">{{item.item_desc}}</view>
+                    <view class="td">{{item.item_unit}}</view>
+                    <view class="td">{{item.item_qty}}</view>
+                    <view class="td">{{item.item_price}}</view>
+                    <view class="td">{{item.item_total_amt}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约恢复',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                合约名称:{{dtMaster.contract_name}}
+            </van-col>
+            <van-col span="12" >合约编号:{{dtMaster.contract_no}}</van-col>
+            <van-col span="12">恢复理由:{{dtMaster.recover_reason}}</van-col>
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+            <van-col span="12" >恢复文件:<span class="c-2071FF">下载</span></van-col>
+            
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约生成',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称(乙方):{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24">
+                公司名称(甲方):{{dtMaster.contract_corp_name}}
+            </van-col>
+            <van-col span="12" >合约名称:{{dtMaster.contract_name}}</van-col>
+            <van-col span="12">合约金额:{{dtMaster.contract_amount}}</van-col>
+            <van-col span="12" >付款周期:{{dtMaster.payment_period}}</van-col>
+            <van-col span="12" >合约业务员姓名:{{dtMaster.contract_sales_name}}</van-col>
+            <van-col span="12" >订单号:{{dtMaster.order_no}}</van-col>
+            <van-col span="12">合约文件:<span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >备注:{{dtMaster.remark}}</van-col>
+            <van-col span="12" >合约类型:{{dtMaster.contract_type}}</van-col>
+            <van-col span="12" >合约描述:{{dtMaster.contract_desc}}</van-col>
+            <van-col span="12">合约分类:{{dtMaster.contract_category}}</van-col>
+            <van-col span="12" >合同是否自动展期:{{dtMaster.is_auto_extension==true?'是':'否'}}</van-col>
+            <van-col span="12" >合同起始服务月份是否确认:{{dtMaster.is_service_start_month_ready==true?'是':'否'}}</van-col>
+            <van-col span="12" >签约日期:{{filter.formatTime(dtMaster.contract_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">公司税种类型:{{dtMaster.corp_tax_type}}</van-col>
+            <van-col span="12" >合同服务开始月份:{{filter.formatTime(dtMaster.contract_month_fm,'yyyy-MM')}}</van-col>
+            <van-col span="12" >合同服务结束月份:{{filter.formatTime(dtMaster.contract_month_to,'yyyy-MM')}}</van-col>
+            <van-col span="12" >法人:{{dtMaster.legal_perosn}}</van-col>
+            <van-col span="12">公司地址:{{dtMaster.corp_address}}</van-col>
+            <van-col span="12" >邮编:{{dtMaster.post_code}}</van-col>
+            <van-col span="12" >联系人:{{dtMaster.contact_person}}</van-col>
+            <van-col span="12" >联系电话:{{dtMaster.contact_phone}}</van-col>
+            <van-col span="12" >联系手机:{{dtMaster.contact_mp}}</van-col>
+            <van-col span="12" >联系邮箱:{{dtMaster.contact_mail}}</van-col>
+            <van-col span="12">合约类别:{{dtMaster.contract_kind}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('合约作废',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称(乙方):{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="24">
+                公司名称(甲方):{{dtMaster.contract_corp_name}}
+            </van-col>
+            <van-col span="12" >合约名称:{{dtMaster.contract_name}}</van-col>
+            <van-col span="12">合约金额:{{dtMaster.contract_amount}}</van-col>
+            <van-col span="12" >付款周期:{{dtMaster.payment_period}}</van-col>
+            <van-col span="12" >合约业务员姓名:{{dtMaster.contract_sales_name}}</van-col>
+            <van-col span="12" >订单号:{{dtMaster.order_no}}</van-col>
+            <van-col span="12">合约文件:<span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >备注:{{dtMaster.remark}}</van-col>
+            <van-col span="12" >合约类型:{{dtMaster.contract_type}}</van-col>
+            <van-col span="12" >合约描述:{{dtMaster.contract_desc}}</van-col>
+            <van-col span="12">合约分类:{{dtMaster.contract_category}}</van-col>
+            <van-col span="12" >合同是否自动展期:{{dtMaster.is_auto_extension==true?'是':'否'}}</van-col>
+            <van-col span="12" >合同起始服务月份是否确认:{{dtMaster.is_service_start_month_ready==true?'是':'否'}}</van-col>
+            <van-col span="12" >签约日期:{{filter.formatTime(dtMaster.contract_month_fm,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >合同服务开始月份:{{filter.formatTime(dtMaster.contract_date,'yyyy-MM')}}</van-col>
+            <van-col span="12" >合同服务结束月份:{{filter.formatTime(dtMaster.contract_month_to,'yyyy-MM')}}</van-col>
+            <van-col span="12" >盖章备注:{{dtMaster.seal_remark}}</van-col>
+            <van-col span="12">公司税种类型:{{dtMaster.corp_tax_type}}</van-col>
+            <van-col span="12" >合约作废人:{{dtMaster.contract_invalid_name}}</van-col>
+            <van-col span="12" >合约作废备注:{{dtMaster.contract_invalid_remark}}</van-col>
+            <van-col span="12" >法人:{{dtMaster.legal_perosn}}</van-col>
+            <van-col span="12">公司地址:{{dtMaster.corp_address}}</van-col>
+            <van-col span="12" >邮编:{{dtMaster.post_code}}</van-col>
+            <van-col span="12" >联系人:{{dtMaster.contact_person}}</van-col>
+            <van-col span="12" >联系电话:{{dtMaster.contact_phone}}</van-col>
+            <van-col span="12" >联系手机:{{dtMaster.contact_mp}}</van-col>
+            <van-col span="12" >联系邮箱:{{dtMaster.contact_mail}}</van-col>
+            <van-col span="12">合约类别:{{dtMaster.contract_kind}}</van-col>
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('账务调整',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                调账开始月份:{{dtMaster.adjust_month_from}}
+            </van-col>
+            <van-col span="12" >调整结束会计月份:{{dtMaster.adjust_month_to}}</van-col>
+            <van-col span="12">申请人:{{dtMaster.apply_user_name}}</van-col>
+            <van-col span="12" >申请时间:{{filter.formatTime(dtMaster.apply_time,"yyyy-MM-dd")}}</van-col>
+            <van-col span="12" >调整理由:{{dtMaster.adjust_reason}}</van-col>           
+        </van-row>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('买单申请',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请周期名称:{{dtMaster.period_name}}
+            </van-col>
+            <van-col span="12">
+                申请周期开始月份:{{filter.formatTime(dtMaster.period_start_month,'yyyy-MM')}}
+            </van-col>
+            <van-col span="12" >申请周期结束月份:{{filter.formatTime(dtMaster.period_end_month,'yyyy-MM')}}</van-col>
+            <van-col span="12">提成月份数:{{dtMaster.commission_months}}</van-col>
+            <van-col span="12" >申请理由:{{dtMaster.apply_reason}}</van-col>
+            <van-col span="12" >备注:{{dtMaster.remark}}</van-col>           
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">客户名称</view >
+                    <view class="th">业务姓名</view >
+                    <view class="th">检查是否合格</view>
+                    <view class="th">基本纳税类型</view>
+                    <view class="th">申请类型</view>
+                    <view class="th">订单号码</view>
+                    <view class="th">招商来源</view>
+                    <view class="th">备注</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">{{item.customer_name}}</view>
+                    <view class="td">{{item.sales_user_name}}</view>
+                    <view class="td">{{item.check_flag=='Y'?'是':'否'}}</view>
+                    <view class="td">{{item.tax_type}}</view>
+                    <view class="td">{{item.apply_type}}</view>
+                    <view class="td">{{item.order_no}}</view>
+                    <view class="td">{{item.attract_investment_source}}</view>
+                    <view class="td">{{item.remark}}</view>
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('注销中止',sign_info_name) }}">
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">客户名称</view>
+                    <view class="th">模板名称</view>
+                    <view class="th">注销负责人姓名</view>
+                    <view class="th">群组名称</view>
+                    <view class="th">流程状态</view>
+                    <view class="th">业务员名称</view>
+                    <view class="th">订单金额</view>
+                    <view class="th">税号</view>
+                    <view class="th">税局</view>
+                    <view class="th">专管员</view>
+                    <view class="th">专管员电话</view>
+                    <view class="th">注册地址</view>
+                    <view class="th">注册金额</view>
+                    <view class="th">注册币别</view>
+                    <view class="th">注册日期</view>
+                    <view class="th">企业类型</view>
+                    <view class="th">核算类别</view>
+                    <view class="th">经营范围</view>
+                    <view class="th">基本税种</view>
+                    <view class="th">征收方式</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">
+                        {{item.customer_name}}
+                    </view>
+                    <view class="td">
+                        {{item.FmWoTempInfo.temp_info_name}}
+                    </view>
+                    <view class="td">
+                        {{item.in_charge_user_name}}
+                    </view>
+                    <view class="td">
+                        {{item.group_name}}
+                    </view>
+                    <view class="td">
+                        {{item.status}}
+                    </view>
+
+                    <view class="td">
+                        {{item.sales_user_name}}
+                    </view>
+                    <view class="td">
+                        {{item.order_amount}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_code}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_bureau}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_contact}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_phone}}
+                    </view>
+                    <view class="td">
+                        {{item.register_addr}}
+                    </view>
+                    <view class="td">
+                        {{item.register_amount}}
+                    </view>
+                    <view class="td">
+                        {{item.register_currency}}
+                    </view>
+                    <view class="td">
+                        {{filter.formatTime(item.register_date,'yyyy-MM-dd') }}
+                    </view>
+                    <view class="td">
+                        {{item.enterprise_type}}
+                    </view>
+                    <view class="td">
+                        {{item.accounting_category}}
+                    </view>
+                    <view class="td">
+                        {{item.business_scope}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_type}}
+                    </view>
+                    <view class="td">
+                        {{item.tax_levy_method}}
+                    </view>
+
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('续费退款',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                <span class="d-l-block"> 服务内容:</span><rich-text nodes="{{dtMaster.service_content}}" class="d-l-block"></rich-text>
+            </van-col>
+            <van-col span="12">
+                付款类别:{{dtMaster.payment_type}}
+            </van-col>
+            <van-col span="12" >客户信息:{{dtMaster.customer_name}}</van-col>
+            <van-col span="12">收入月份:{{dtMaster.income_period}}</van-col>
+            <van-col span="12" >总服务收入:{{dtMaster.total_income}}</van-col>
+            <van-col span="12" >核准收款金额:{{dtMaster.approved_amount}}</van-col>   
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+            <van-col span="12">文件: <span class="c-2071FF">下载</span></van-col>
+            <van-col span="12" >退款金额:{{dtMaster.refund_total_amount}}</van-col>
+            <van-col span="12" >退款用户姓名:{{dtMaster.refund_apply_user_name}}</van-col>  
+            <van-col span="12" >退款申请时间:{{filter.formatTime(dtMaster.refund_apply_time,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >退款理由:{{dtMaster.refund_reason}}</van-col> 
+                      
+        </van-row>
+         <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                     <view class="th">退款金额</view >
+                     <view class="th">服务分类</view >
+                     <view class="th">服务名称</view >
+                     <view class="th">服务价格</view >
+                     <view class="th">实际价格</view >
+                     <view class="th">实际开始数</view >
+                     <view class="th">实际结束数</view >
+                     <view class="th">服务周期</view >
+                     <view class="th">付款周期</view >
+                     <view class="th">服务开始月份</view >
+                     <view class="th">服务结束月份</view >
+                     <view class="th">是否中止</view >
+                     <view class="th">服务月数</view >
+                     <view class="th">服务金额</view >
+                     <view class="th">调整理由</view >
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                        <view class="td">{{item.refund_amount}}</view >
+                        <view class="td">{{item.service_category}}</view >
+                        <view class="td">{{item.service_name}}</view >
+                        <view class="td">{{item.service_price}}</view >
+                        <view class="td">{{item.actual_price}}</view >
+                        <view class="td">{{item.actual_service_limit_fm}}</view >
+                        <view class="td">{{item.actual_service_limit_to}}</view >
+                        <view class="td">{{item.service_period}}</view >
+                        <view class="td">{{item.payment_period}}</view >
+                        <view class="td">{{filter.formatTime(item.service_month_fm,'yyyy-MM-dd') }}</view >
+                        <view class="td">{{filter.formatTime(item.service_month_to,'yyyy-MM-dd')}}</view >
+                        <view class="td">{{item.is_terminated}}</view >
+                        <view class="td">{{item.service_months}}</view >
+                        <view class="td">{{item.service_amount}}</view >
+                        <view class="td">{{item.adjust_reason}}</view >
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('业务咨询客户签核',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="24" custom-class=" c-333">
+                客户名称:{{dtMaster.customer_name}}
+            </van-col>
+            <van-col span="12">
+                行业大类:{{dtMaster.industry_big_cat}}
+            </van-col>
+            <van-col span="12" >行业小类:{{dtMaster.industry_small_cat}}</van-col>
+            <van-col span="12">首次客户进入日期:{{filter.formatTime(dtMaster.first_customer_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12" >联系人名称:{{dtMaster.contact_name}}</van-col>
+            <van-col span="12" >联系人电话:{{dtMaster.contact_phone}}</van-col>   
+            <van-col span="24" >联系人地址:{{dtMaster.contact_address}}</van-col>
+            <van-col span="12">联系人邮箱:{{dtMaster.contact_mail}}</van-col>
+            <van-col span="12" >招商来源:{{dtMaster.attract_investment_source}}</van-col>
+            <van-col span="12" >客户来源:{{dtMaster.customer_source}}</van-col>  
+            <van-col span="12" >客户分类:{{dtMaster.customer_category}}</van-col>
+            <van-col span="12" >服务项目:{{dtMaster.service_item_category}}</van-col> 
+            <van-col span="12" >咨询内容:{{dtMaster.consult_content}}</van-col>   
+            <van-col span="24" >备注:{{dtMaster.remark}}</van-col>
+                      
+        </van-row>
+         <scroll-view scroll-x="true" style="white-space: nowrap; display: flex" >
+            <view class="row-table font-24 text-center" >
+                <view class="theader">
+                    <view class="th">类型</view >
+                    <view class="th">修改之前</view >
+                    <view class="th">修改之后</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">招商来源</view>
+                    <view class="td">{{item.attract_investment_source_cb}}</view>
+                    <view class="td" wx:if="{{item.attract_investment_source_cb==item.attract_investment_source_ca}}">{{item.attract_investment_source_ca}}</view>
+                    <view class="td" wx:else>{{item.attract_investment_source_ca}}</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">客户来源</view>
+                    <view class="td">{{item.customer_source_cb}}</view>
+                    <view class="td" wx:if="{{item.customer_source_cb==item.customer_source_ca}}">{{item.customer_source_cb}}</view>
+                    <view class="td" wx:else>{{item.customer_source_ca}}</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">服务项目</view>
+                    <view class="td">{{item.service_item_category_cb}}</view>
+                    <view class="td" wx:if="{{item.service_item_category_cb==item.service_item_category_ca}}">{{item.service_item_category_ca}}</view>
+                    <view class="td" wx:else>{{item.service_item_category_ca}}</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">客户分类</view>
+                    <view class="td">{{item.customer_category_cb}}</view>
+                    <view class="td" wx:if="{{item.customer_category_cb==item.customer_category_ca}}">{{item.customer_category_ca}}</view>
+                    <view class="td" wx:else>{{item.customer_category_ca}}</view>
+                </view>
+                <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">是否有效</view>
+                    <view class="td">{{item.enabled_cb ==true?'是':'否'}}</view>
+                    <view class="td" wx:if="{{item.enabled_cb==item.enabled_ca}}">{{item.enabled_ca ==true?'是':'否'}}</view>
+                    <view class="td" wx:else>{{item.enabled_ca ==true?'是':'否'}}</view>
+                </view>
+                    <view class="tr" wx:for="{{dtDetail}}" wx:key="index">
+                    <view class="td">修改理由</view>
+                    <view class="td">{{item.change_reason}}</view>
+                    
+                </view>
+            </view>
+        </scroll-view>
+    </block>
+    <block wx:elif="{{tools.signInfoShow('需求签核',sign_info_name) }}">
+        <van-row custom-class="font-24 c-666 mt" >
+            <van-col span="12" custom-class=" c-333">
+                申请人姓名:{{dtMaster.apply_user_name}}
+            </van-col>
+            <van-col span="12">
+                类型:{{dtMaster.task_category}}
+            </van-col>
+            <van-col span="12" >任务名称:{{dtMaster.task_name}}</van-col>
+            <van-col span="12">提交时间:{{filter.formatTime(dtMaster.apply_time,'yyyy-MM-dd hh:mm:ss')}}</van-col>
+            <van-col span="12" >任务描述:<rich-text nodes="{{dtMaster.task_desc}}"></rich-text></van-col>
+        </van-row>
+        
+    </block>
+    <block wx:else>
+       <view class="container t-center c-999">
+            <icon class="iconfont/iconkong2:before font-96"></icon>
+        </view>        
+    </block>    
+</view>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />

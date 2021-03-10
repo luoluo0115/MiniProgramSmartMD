@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "auth": "../../../components/auth/auth"
+  },
+  "navigationBarTitleText": "咨询线索接受"
+}

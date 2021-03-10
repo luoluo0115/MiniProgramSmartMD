@@ -1,0 +1,30 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<view class="">
+    <view class="bg-198fff container t-center pd">
+        <view class="timeDate font-64 c-fff ">{{SStime}}</view>
+        <view class="timeDate font-32 c-fff">{{time}} {{date}}</view>
+    </view>
+    <view class="local-wrapper t-center bg-fff content">
+        <icon class="iconfont/icondizhi:before font-48 c-198fff "></icon>
+        <view class="font-28">上海市建国西路科投大厦</view>
+        <view class="circle"  bind:tap="Submit">
+            <view class="minicircle t-center" >
+                <icon class="iconfont/icondaqia1:before font-96 c-198fff "></icon>
+                <view>外出打卡</view>
+            </view>
+        </view>
+    </view>
+    <view class="content ">
+        <view class="center-grid2 bg-fff">
+        <view class="center-title c-333 font-28">
+            打卡记录
+        </view>
+        <van-cell-group>
+            <van-cell icon="location-o"  title="{{item.card_machine}}" value="{{item.card_date}}" label="" wx:for="{{hrCardLogList}}" wx:key="index"/>
+        </van-cell-group>
+        </view>
+    </view>
+</view>
+
+
+

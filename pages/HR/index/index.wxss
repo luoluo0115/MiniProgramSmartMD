@@ -1,0 +1,76 @@
+/*引导页面*/
+.container{
+}
+.header{
+  background: #198fff;
+  border-bottom-left-radius: 35rpx;
+  border-bottom-right-radius: 35rpx;
+  padding-bottom: 65rpx;
+  padding-top: 15rpx;
+}
+.header-title{
+  /* margin-top: 32px;     */
+}
+.center-grid{
+  top: -45rpx;
+  position: relative;
+  border-radius: 15rpx;
+  background-color: white;
+  box-shadow: 0 6px 8px #ebedf0;
+  padding: 0rpx 20rpx;
+}
+.center-grid2{
+  top: -20rpx;
+  position: relative;
+  border-radius: 15rpx;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 15rpx;
+  box-shadow: 0 6px 8px #ebedf0;
+}
+.center-title{
+  background-color: #f7f7f7;
+  color: #333;
+  padding:  15rpx;
+  border-top-left-radius: 15rpx;
+  border-top-right-radius: 15rpx;
+}
+
+/* 公告start */
+
+.icon-notice{
+  color: #333;
+  font-size: 32rpx;
+  text-align: right;
+}
+ .swiper-notice {
+  font-size: 26rpx;
+  color:    #fa6016;
+  position: absolute;
+  top:0rpx;
+  left:0
+}
+
+.swiper-container {
+  margin-left: 10rpx;
+  width: 580rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+.swiper-container .swiper-item {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  font-size: 26rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 2rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+.mt20{
+  margin-top: 20rpx;
+}

@@ -1,0 +1,140 @@
+<!-- 日历年月 -->
+<view class='calendar_title flex_nowrap'>
+  <van-row>
+    <van-col span="4">
+      <view class='icon t-center' bindtap='lastMonth'>
+        <icon class="iconfont/iconzuo:before font-48 c-fff "></icon>
+      </view>
+    </van-col>
+    <van-col span="16">
+      <view class="t-center">{{year}}年{{month}}月</view>
+    </van-col>
+    <van-col span="4">
+      <view class='icon t-center' bindtap='nextMonth'>
+        <icon class="iconfont/iconleft:before font-48 c-fff "></icon>
+      </view>
+    </van-col>
+  </van-row>
+
+</view>
+
+<!-- 日历主体 -->
+<view class='calendar'>
+  <view class='header container'>
+    <view wx:for='{{date}}' wx:key='index' class='{{(index == todayIndex) && isTodayWeek ? "weekMark" : ""}}'>{{item}}
+      <view></view>
+    </view>
+  </view>
+  <view class='date-box container'>
+    <block wx:for='{{dateArr}}' wx:key='index'>
+      <view class='{{isToday == item.isToday ? "nowDay" : ""}}'>
+        <view class='date-head' bindtap='onEmpDaily' data-year='{{year}}' data-month='{{month}}'
+          data-datenum='{{item.dateNum}}'>
+          <view>{{item.dateNum}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+</view>
+<view class="local-wrapper t-center bg-fff content" wx:if="{{user_category=='外勤'}}">
+  <view class="font-24 c-666 address-content">
+    <van-row>
+      <van-col span="20">
+        您的当前位置:{{address}}
+      </van-col>
+      <van-col span="4" bind:tap="{{!showIconLoad?'getUserLocation':''}}">
+        <icon class="iconfont/iconshuaxin:before font-32 icon-mt t-right" wx:if="{{!showIconLoad}}"></icon>
+        <view wx:if="{{showIconLoad}}" class="font-24">正在定位...</view>
+      </van-col>
+    </van-row>
+  </view>
+  <!-- <view class="map_container"> 
+        <map class="map" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" show-location="true" markers="{{markers}}" bindmarkertap="makertap"></map> 
+    </view>  -->
+  <view class="circle" bind:tap="Submit">
+    <view class="minicircle t-center">
+      <icon class="iconfont/icondaqia1:before font-48 c-198fff "></icon>
+      <view class="font-24">签到</view>
+    </view>
+  </view>
+</view>
+<view class="local-wrapper t-center bg-fff content" wx:else>
+  <view class="font-24 c-666 address-content">
+    <van-row>
+      <van-col span="20">
+        您的当前位置:{{address}}
+      </van-col>
+      <van-col span="4" bind:tap="{{!showIconLoad?'getUserLocation':''}}">
+        <icon class="iconfont/iconshuaxin:before font-32 icon-mt t-right" wx:if="{{!showIconLoad}}"></icon>
+        <view wx:if="{{showIconLoad}}" class="font-24">正在定位...</view>
+      </van-col>
+    </van-row>
+  </view>   
+  <view class="circle" bind:tap="Submit">
+    <view class="minicircle t-center">
+      <icon class="iconfont/icondaqia1:before font-48 c-198fff "></icon>
+      <view class="font-24">{{currentTime}}</view>
+    </view>
+  </view>
+</view>
+<view class="content ">
+  <view class="center-grid2 bg-fff">
+    <view class="center-title c-333 font-28">
+      <van-row>
+        <van-col span="16">
+          考勤记录
+          <text wx:if="{{hrEmpDailyCardList!=''}}" class="font-24 ">(班次:{{hrEmpDailyCardList[0].duty_kind}})</text>
+        </van-col>
+        <van-col span="8" custom-class="t-right c-198fff ">
+          <block wx:if="{{hrEmpDailyCardList!=''}}">{{hrEmpDailyCardList[0].myType}}</block>
+        </van-col>
+      </van-row>
+
+    </view>
+    <van-cell-group wx:if="{{hrEmpDailyCardList!=''}}">
+      <van-cell icon="clock-o" title="上班时间" value="{{hrEmpDailyCardList[0].duty_on_time}}" />
+      <van-cell icon="clock-o" title="下班时间" value="{{hrEmpDailyCardList[0].duty_off_time}}" />
+    </van-cell-group>
+    <view class="container t-center c-999 pd-12" wx:else>
+      <icon class="iconfont/iconkong2:before font-96"></icon>
+      <view class="font-28">暂无考勤记录</view>
+    </view>
+  </view>
+</view>
+
+<view class="content ">
+  <view class="center-grid2 bg-fff">
+    <view class="center-title c-333 font-28">
+      <van-row>
+        <van-col span="16">
+          打卡记录
+        </van-col>
+      </van-row>
+    </view>
+    <van-cell-group wx:if="{{cardLogList!=''}}">
+      <view wx:for="{{cardLogList}}" wx:key="index" class="step-list bg-fff font-24 c-999 container">
+        <van-row>
+          <van-col span="16" offset="2" custom-class="c-333">
+            <van-icon name="clock-o" />
+            <span class="c-333 d-block"> {{item.card_date}} </span>            
+          </van-col>
+          <van-col span="6" custom-class="text-right"><text class="c-198fff">{{item.emp_name}}</text></van-col>
+          <van-col span="22" offset="2" custom-class="font-20"><van-icon name="location-o" />{{item.remark}}</van-col>
+        </van-row>
+        <view class="circle-container"><text
+            class="step-circle active">{{index+1}}</text></view>
+        <view class="step-line active"></view>
+      </view>
+    </van-cell-group>
+    <view class="container t-center c-999 pd-12" wx:else>
+      <icon class="iconfont/iconkong2:before font-96"></icon>
+      <view class="font-28">暂无打卡记录</view>
+    </view>
+
+
+
+  </view>
+</view>
+<van-toast id="van-toast" />
+<van-loading wx:if="{{loading}}" class="t-center" />

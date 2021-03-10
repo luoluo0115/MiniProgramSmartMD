@@ -1,0 +1,43 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<block wx:if="{{signBillList!=''}}">
+    <van-row custom-class="work-list font-24 c-666 container" wx:for="{{signBillList}}" wx:key="index"
+        bind:tap="goSingleSignBill" data-item="{{item}}">
+        <van-button color="#198fff" size="mini" custom-class="status-btn">{{item.status_desc}}</van-button>
+        <!-- <van-col span="2" custom-class="font-28 c-333 mb-10">
+            <view style="width:20px;">
+                <open-data type="userAvatarUrl"></open-data>
+            </view>
+        </van-col> -->
+        <van-col span="5" custom-class="font-28 c-333 mb-10">
+            <van-icon name="contact" /> {{item.apply_name}}
+        </van-col>
+        <van-col span="19" custom-class="font-28 c-333 mb-10">
+            <van-tag round type="primary">{{item.sign_opinion}}</van-tag>
+        </van-col>
+      
+        <van-col span="12" custom-class="mb-10">
+            <van-icon name="label-o" /> {{item.sign_bill_no}}
+        </van-col>
+        <van-col span="12" custom-class="mb-10">
+            <van-icon name="clock-o" /> {{filter.formatMinute(item.sign_date)}}
+        </van-col>
+        <van-col span="24" custom-class="mb-10">
+            <van-icon name="location-o" />申请内容：{{item.remark_desc}}
+        </van-col>
+        <van-col span="24" custom-class="t-right d-l-block c-999 bor-t">
+            详情>>
+        </van-col>
+    </van-row>
+    <view class="content" wx:if="{{noData}}">
+        <van-divider contentPosition="center">暂无更多</van-divider>
+    </view>
+</block>
+<block wx:else>
+    <view class="container t-center c-999">
+        <icon class="iconfont/iconkong2:before font-172"></icon>
+        <view class="font-28">您没有需要签核的单据({{emp_no}})</view>
+    </view>
+</block>
+<van-toast id="van-toast" />
+<van-loading wx:if="{{loading}}" class="t-center" />
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>

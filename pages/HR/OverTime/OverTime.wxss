@@ -1,0 +1,13 @@
+/* pages/offical/extraWork/extraWork.wxss */
+.container{
+    padding: 20rpx 24rpx;
+}
+.pd{
+    padding: 34rpx 0px
+}
+.pd-12{
+    padding: 24rpx 0px
+}
+.filter-icon{
+   
+}

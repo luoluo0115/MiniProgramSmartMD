@@ -1,0 +1,27 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<view class="page">
+    <view class="page__bd page__bd_spacing">         
+        <view class="list-content">
+            <view class="list-title">咨询详情</view>
+            <view class="list-detail">
+                <van-cell-group>
+                    <van-cell title="客户进入日期" value="{{consultInfo.first_customer_date}}" />
+                    <van-cell title="线索录入人员" value="{{consultInfo.pre_sales_user_name}}" />                    
+                    <van-cell title="公司名称" value="{{consultInfo.customer_name}}" />
+                    <van-cell title="联系人名称" value="{{consultInfo.contact_name}}" />
+                    <van-cell title="联系人电话" value="{{consultInfo.contact_phone}}" />
+                    <van-cell title="联系人微信" value="{{consultInfo.contact_wechat}}" />
+                    <van-cell title="联系人邮箱" value="{{consultInfo.contact_mail}}" />
+                    <van-cell title="客户分类" value="{{consultInfo.customer_category}}" />                 
+                    <van-cell title="服务项目" value="{{consultInfo.service_item_category}}" />                 
+                    <van-cell title="咨询内容" value="{{consultInfo.consult_content}}" />
+                    <van-cell title="备注" value="{{consultInfo.remark}}" />                    
+                </van-cell-group>                    
+            </view>                           
+            <view class="btn" wx:if="{{consultInfo.is_assigned=='Y' && consultInfo.is_accepted=='N'}}" bindtap="AffirmRec" >确认接受</view>
+        </view>
+    </view>
+</view>
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />

@@ -1,0 +1,10 @@
+<!--pages/login/login.wxml-->
+<view class='container-login'>
+  <image class="containert-img" src="{{loginBg}}" mode="aspectFill" />
+  <view class='journey-container'>
+      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"  class="empower-btn" > 立即加入 </button>
+      <block wx:else>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+  </view>
+</view>

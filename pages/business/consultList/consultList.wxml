@@ -1,0 +1,164 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<view class="fixed-filter">
+    <!-- <van-row>
+        <van-col span="20">
+            <van-search
+                value="{{ value }}"
+                placeholder="请输入搜索编号"                
+                bind:search="onSearch"
+                bind:cancel="onCancel"
+                />
+        </van-col>
+        <van-col span="4" custom-class="t-right c-666 font-28 filter">
+            <view  class="{{activeFiler==true?'c-221611':''}}"  bindtap="onClickSelectShow" >
+                <icon class="iconfont/iconshaixuan:before font-32 "></icon> 筛选
+            </view>
+        </van-col>
+    </van-row> -->
+    <view class="containertop">
+        <van-row gutter="5">
+            <van-col span="10">
+                <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="fTime">
+                    开始时间:{{date_start}}</van-button>
+            </van-col>
+            <van-col span="10">
+                <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="eTime">
+                    结束时间:{{date_end}}</van-button>
+            </van-col>
+            <van-col span="4">
+                <view class="t-right c-666 font-24 filter-p0">
+                    <view  class="{{activeFiler==true?'c-2071FF':''}}"  bindtap="onClickSelectShow" >
+                        <icon class="iconfont/iconshaixuan:before font-28 icon-filter"></icon> 筛选
+                    </view>
+                </view>
+            </van-col>            
+        </van-row>
+    </view>
+
+    <view class="container filter-container" wx:if="{{selectShow}}">
+        <scroll-view class="filter-scroll" scroll-y="true" >
+            <!-- <van-row gutter="5 " custom-class="border-b">
+                <van-col span="8" custom-class="text-left c-666 font-28 filter-time">
+                    开始/结束时间：
+                </van-col>
+                <van-col span="8" >
+                    <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="fTime">开始时间{{date_start}}</van-button>
+                </van-col>
+                <van-col span="8">
+                    <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="eTime">结束时间{{date_end}}</van-button>
+                </van-col>            
+            </van-row> -->
+            <van-field
+                label-class="c-333"
+                value="{{contact_phone}}"
+                input-align="right"
+                type="text"                
+                clearable
+                label="客户手机："
+                placeholder="请输入客户手机"            
+                data-fieldName="contact_phone"            
+                bind:input="handleFieldChange"
+            />
+            <van-field
+                label-class="c-333"
+                value="{{customer_name}}"
+                input-align="right"
+                type="text"                
+                clearable
+                label="业务客户："
+                placeholder="请输入业务客户"            
+                data-fieldName="customer_name"            
+                bind:input="handleFieldChange"
+            />
+            <van-field
+                label-class="c-333"
+                value="{{sales_name}}"
+                input-align="right"
+                type="text"                
+                clearable
+                label="业务员："
+                placeholder="请输入业务员"            
+                data-fieldName="sales_name"            
+                bind:input="handleFieldChange"
+            />
+            <van-cell title="客户来源：" value="{{customer_source}}" is-link bind:click="onSelectDDL" data-type="customer_source"/>
+            <van-cell title="服务项目：" value="{{service_item_category}}" is-link bind:click="onSelectDDL" data-type="service_item_category"/>
+            <van-cell title="客户状态：" value="{{customer_status}}" is-link bind:click="onSelectDDL" data-type="customer_status"/>            
+            <van-row gutter="5" custom-class="border-b">
+                <van-col span="8" custom-class="text-left c-666 font-28 filter-time" >
+                    是否有效：
+                </van-col>
+                <van-col span="16"  >
+                    <van-button round custom-class="btn-item" wx:for="{{isEnabledList}}" wx:key="index" color="{{checkedEnabled==item.value?'#044fff':'#999'}}" plain size="small" bind:tap="selectedEnabled" data-title="{{item.value}}" >{{item.title}}</van-button>
+                </van-col>
+            </van-row>             
+            <van-row gutter="5" custom-class="border-b">
+                <van-col span="8" custom-class="text-left c-666 font-28 filter-time" >
+                    是否分配：
+                </van-col>
+                <van-col span="16" >
+                    <van-button round custom-class="btn-item" wx:for="{{isAssignedList}}" wx:key="index" color="{{checkedAssigned==item.value?'#044fff':'#999'}}" plain size="small" bind:tap="selectedAssigned" data-title="{{item.value}}" >{{item.title}}</van-button>
+                </van-col>
+            </van-row>
+            <van-row gutter="10" custom-class="mt-20">    
+                <van-col span="12"><van-button color="#999" block size="small"  bind:tap="confirmCancel">清空筛选</van-button></van-col>
+                <van-col span="12"><van-button color="#198fff"  block size="small"  bind:tap="confirmSearch">确定</van-button></van-col>
+            </van-row>
+        </scroll-view>
+    </view>
+</view>
+
+<view class="filter-wrapper">
+    <view class="container date" >
+        <van-row gutter="5">
+            <van-col span="8" offset="16" custom-class="text-right">
+                <van-button block icon="add-o" color="#198fff" size="mini" bind:tap="Add">新增咨询</van-button>
+            </van-col>             
+        </van-row>
+    </view>
+    <view class="hr"></view>
+    <block wx:if="{{salesList!=''}}">
+        <van-row custom-class="work-list font-24 c-666 container" wx:for="{{salesList}}" wx:key="index">
+            <van-col span="12">进入日期:{{filter.formatTime(item.customer_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">
+                客户状态:<van-tag plain type="primary">{{item.customer_status}}</van-tag>                                  
+            </van-col>
+            <van-col span="12">销售姓名:{{item.sales_name}}</van-col>
+            <van-col span="12">服务项目:{{item.service_item_category}}</van-col>
+            <van-col span="24">公司名称:{{item.customer_name}}</van-col>
+            <van-col span="12">分配时间:{{filter.formatTime(item.assign_time,'yyyy-MM-dd hh:mm')}}</van-col>
+            <van-col span="12">接受时间:{{filter.formatTime(item.accept_time,'yyyy-MM-dd hh:mm')}}</van-col>
+            <van-col span="12">接受用时(分):{{item.times==null?'0':item.times}}</van-col>
+            <van-col span="12">客户来源:{{item.customer_source==null?'0':item.customer_source}}</van-col>
+            <van-col span="12">联系人名称:{{item.contact_name}}</van-col>  
+            <van-col span="12">联系人电话:{{item.contact_phone}}</van-col>            
+            <van-col span="24">咨询内容:{{item.consult_content}}</van-col>             
+            <van-col span="24" custom-class="t-right mt-border">
+                <view class="mt">
+                    <van-button type="info" size="mini" round custom-class="ml" bindtap="Detail" data-item="{{item}}">详情
+                    </van-button>                     
+                    <van-button type="info" wx:if="{{item.is_assigned=='N'}}" size="mini" round custom-class="ml" bindtap="Edit" data-item="{{item}}">编辑
+                    </van-button>
+                    <van-button type="info" wx:if="{{item.is_assigned=='N' && item.enabled==true}}" size="mini" round custom-class="ml" bindtap="assign"
+                        data-pre_customer_info_id="{{item.pre_customer_info_id}}">分配</van-button>
+                </view>
+            </van-col>
+        </van-row>
+    </block>
+    <block wx:else>
+        <view class="container t-center c-999">
+            <icon class="iconfont/iconkong2:before font-172"></icon>
+            <view class="font-28">{{msg}}</view>
+        </view>
+    </block>
+</view>
+<van-popup show="{{ timeshow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-datetime-picker type="date" value="{{ currentDate }}" bind:input="onInput" formatter="{{ formatter }}"
+        bind:input="onInput" bind:confirm="onConfirm" bind:cancel="onClose" />
+</van-popup>
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />

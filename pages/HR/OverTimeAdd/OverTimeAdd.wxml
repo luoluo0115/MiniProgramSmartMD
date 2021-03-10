@@ -1,0 +1,37 @@
+<view>
+    <van-cell-group>
+        <van-cell title="加班日期" value="{{plan_date_fm}}" size="small" bind:click="onChangedayTime" is-link />
+        <van-cell title="开始时间(时)" value="{{plan_time_hh_fm}}" size="small" bind:click="onChangeHour" data-time="fhour"
+            is-link />
+        <van-cell title="开始时间(分)" value="{{plan_time_mm_fm}}" size="small" bind:click="onChangeMM" data-mtime="fMM"
+            is-link />
+        <van-cell title="结束时间(时)" value="{{plan_time_hh_to}}" size="small" bind:click="onChangeHour" data-time="ehour"
+            is-link />
+        <van-cell title="结束时间(分)" value="{{plan_time_mm_to}}" size="small" bind:click="onChangeMM" data-mtime="eMM"
+            is-link />
+        <van-field label-class="c-333" value="{{ reason }}" input-align="right" type="text" label="原因"
+            placeholder="请输入请假原因" bind:change="onChangeReason" />
+        <van-field label-class="c-333" value="{{ remark }}" label="备注" placeholder="请输入备注" size="small"
+            input-align="right" bind:change="onChangeRemark" />
+        <van-row custom-class="pd-16">
+            <van-col span="12" custom-class="c-333 font-28">是否特殊加班</van-col>
+            <van-col span="12" custom-class="t-right">
+                <van-switch checked="{{ is_special }}" bind:change="onChange" size="20px" custom-class="" />
+            </van-col>
+        </van-row>
+    </van-cell-group>
+    <view class="container-btn">
+        <van-button type="primary" block size="normall" bindtap="onSubmit" color="#198fff">提交信息</van-button>
+    </view>
+</view>
+<van-toast id="van-toast" />
+<van-popup show="{{ show }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-datetime-picker type="date" value="{{ currentDate }}" min-date="{{ minDate }}" formatter="{{ formatter }}"
+        bind:input="onInput" bind:confirm="onConfirm" bind:cancel="onClose" />
+</van-popup>
+<van-popup show="{{ hhshow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-picker columns="{{ columnsHH }}" default-index="8" show-toolbar bind:confirm="onConfirmHH" bind:cancel="onClose" />
+</van-popup>
+<van-popup show="{{ mmshow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-picker columns="{{ columnsMM }}" show-toolbar bind:confirm="onConfirmMM" bind:cancel="onClose" />
+</van-popup>

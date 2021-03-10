@@ -1,0 +1,7 @@
+.value-class {
+  flex: none !important;
+}
+.van-field__label {
+  color: #333!important;
+  color: var(--field-label-color,#333)!important;
+}

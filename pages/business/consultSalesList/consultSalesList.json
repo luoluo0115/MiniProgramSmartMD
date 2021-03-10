@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "auth": "../../../components/auth/auth"
+  },
+  "navigationBarTitleText": "销售跟进",
+  "enablePullDownRefresh": true
+}

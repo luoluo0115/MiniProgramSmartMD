@@ -1,0 +1,37 @@
+<!--pages/me/index/index.wxml-->
+<view class='container me'>
+    <van-card
+    custom-class="header-card"
+    desc="{{userInfoList.dept_name}}"
+    title="{{userInfoList!=''?userInfoList.user_name:userInfo.nickName}} "
+    title-class="title font-32"
+    desc-class="desc font-28"
+    thumb="{{ userInfo.avatarUrl}}"
+    thumb-mode="contain"
+    >
+        <view slot="tags" wx:if="{{userInfoList!=''}}">
+            <van-tag plain color="#198fff" custom-class="tag">{{userInfoList.title_name}}</van-tag>
+        </view>
+        
+    </van-card>
+    
+    <van-cell-group>
+        <van-cell title="工号" value="{{userInfoList.emp_no}}" icon="idcard"/>
+        <van-cell title="类型" value="{{userInfoList.emp_type}}" icon="award-o"/>
+        <van-cell title="状态" value="{{userInfoList.status}}" icon="diamond-o"/>
+        <van-cell title="微信" value="{{userInfoList.user_wechat}}" icon="manager-o"/>
+        <van-cell title="邮箱" value="{{userInfoList.email}}" icon="free-postage"/>
+        <van-cell title="地址" value="{{userInfoList.work_loc}}" icon="location-o"/>
+        <van-cell title="手机号" value="{{userInfoList.cell_phone}}"  border="{{ false }}" icon="phone-o"/>
+    </van-cell-group>
+     <view class="container-btn ">
+        <view class="JQbtn">
+            <navigator class="exit" target="miniProgram" open-type="exit">
+                退出小程序
+            </navigator>
+        </view>
+        
+    </view>
+</view>
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+

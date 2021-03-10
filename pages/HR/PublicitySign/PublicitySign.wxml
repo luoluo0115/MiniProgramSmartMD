@@ -1,0 +1,153 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<!-- <view class="fixed-filter">    
+    <van-row>
+        <van-col span="20">
+            <van-search
+                value="{{ value }}"
+                placeholder="请输入搜索编号"
+                show-action
+                bind:search="onSearch"
+                bind:cancel="onCancel"
+                />
+        </van-col>
+        <van-col span="4" custom-class="t-right c-666 font-28 filter">
+            <view  class="{{activeFiler==true?'c-221611':''}}"  bindtap="onClickSelectShow" >
+                <icon class="iconfont/iconshaixuan:before font-32 "></icon> 筛选
+            </view>
+        </van-col>
+    </van-row>   
+    <view class="container filter-container" wx:if="{{selectShow}}">
+        <scroll-view class="filter-scroll" scroll-y="true" >
+            <van-row gutter="5 " custom-class="border-b">
+                <van-col span="8" custom-class="text-left c-666 font-28 filter-time">
+                    日期
+                </van-col>
+                <van-col span="8" >
+                    <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="fTime">{{ftime}}</van-button>
+                </van-col>
+                <van-col span="8">
+                    <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="eTime">{{etime}}</van-button>
+                </van-col>
+            
+            </van-row>
+            <van-field
+                label-class="c-333"
+                value="{{consultList.contact_name}}"
+                input-align="right"
+                type="text"
+                required
+                clearable
+                label="联系人名称"
+                placeholder="请输入联系人名称"            
+                data-fieldName="contact_name"            
+                bind:input="handleFieldChange"
+            />
+            <van-field
+                label-class="c-333"
+                value="{{consultList.contact_name}}"
+                input-align="right"
+                type="text"
+                required
+                clearable
+                label="业务客户"
+                placeholder="请输入业务客户"            
+                data-fieldName="contact_name"            
+                bind:input="handleFieldChange"
+            />
+            <van-cell title="招商来源" required value="{{consultList.attract_investment_source}}" is-link bind:click="onSelectDDL" data-type="attract_investment_source"/>
+            <van-row gutter="5" custom-class="border-b">
+                <van-col span="8" custom-class="text-left c-666 font-28 filter-time" >
+                    是否有效
+                </van-col>
+                <van-col span="16"  >
+                    <van-button round custom-class="btn-item" wx:for="{{TypeList}}" wx:key="index" color="{{checkedType==item.title?'#044fff':'#999'}}" plain size="small" bind:tap="selectedType" data-title="{{item.title}}" >{{item.title}}</van-button>
+                </van-col>
+            </van-row>
+            <van-row gutter="10" custom-class="mt-20">    
+                <van-col span="12"><van-button color="#999" block size="small"  bind:tap="goSignBill" data-item="reject">清空筛选</van-button></van-col>
+                <van-col span="12"><van-button color="#198fff"  block size="small"  bind:tap="goSignBill" data-item="approve">确定</van-button></van-col>
+            </van-row>
+        </scroll-view>
+    </view>
+</view> -->
+
+<view class="">
+     <view class="container" >
+        <van-row gutter="5">
+            <van-col span="12" >
+                <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="fTime">开始:{{ftime}}</van-button>
+            </van-col>
+            <van-col span="12">
+                <van-button block color="#198fff" plain size="small" bind:tap="selectedTime" data-time="eTime">结束:{{etime}}</van-button>
+            </van-col>
+        </van-row>
+    </view>
+    <view class="hr"></view>
+ 
+     <block wx:if="{{hrCardLogList!=''}}">
+        <view class="content" >
+            <view class="font-24 c-666 address-content">
+                <van-row >
+                    <van-col span="20" >
+                        您的当前位置:{{address}} 
+                    </van-col>
+                    <van-col span="4" bind:tap="{{!showIconLoad?'getUserLocation':''}}">
+                        <icon class="iconfont/iconshuaxin:before font-32 icon-mt t-right"  wx:if="{{!showIconLoad}}"></icon>
+                        <view  wx:if="{{showIconLoad}}" class="font-24">正在定位...</view>
+                    </van-col>
+                </van-row>
+            </view>
+        </view>
+        <view class="hr"></view>
+        <van-row custom-class="work-list font-24 c-666 container" wx:for="{{hrCardLogList}}" wx:key="index">
+            <van-col span="12" custom-class=" c-333 font-28 lin2">
+                {{item.absent_name}}
+            </van-col>
+            <van-col span="12" custom-class="t-right d-l-block c-198fff lin2">                
+                <van-tag plain type="primary">{{item.status_desc}}</van-tag>
+            </van-col>
+            <van-col span="24" custom-class="lin2">公出原因:{{item.reason}}</van-col>
+            <van-col span="24" custom-class="lin2">公出时间:{{filter.dateFormatStr(item.plan_date_fm)}} {{item.plan_time_hh_fm}}:{{item.plan_time_mm_fm}}-{{filter.dateFormatStr(item.plan_date_to)}} {{item.plan_time_hh_to}}:{{item.plan_time_mm_to}}</van-col>
+            <van-col span="24"  custom-class=" mt-border font-24 ">
+                <view class="mt">
+                <van-row gutter="10">
+                    <van-col span="12">
+                        <van-button block type="info" icon="location-o"  size="small"  custom-class="" bindtap="PostHrPublicitySignAdd"  data-off_duty_id="{{item.off_duty_id}}" data-sign_io_type="签入">到达</van-button>
+                    </van-col>
+                    <van-col span="12">
+                        <van-button block type="info" icon="location-o"  size="small"  custom-class="" bindtap="PostHrPublicitySignAdd" data-off_duty_id="{{item.off_duty_id}}" data-sign_io_type="签出">离开</van-button>
+                    </van-col>
+                </van-row>
+                </view>
+            </van-col>
+        </van-row>
+    </block>
+    <block wx:else>
+        <view class="container t-center c-999">
+            <icon class="iconfont/iconkong2:before font-172"></icon>
+            <view class="font-28">{{msg}}</view>
+        </view>        
+    </block>
+</view>
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />
+<van-popup
+  show="{{ timeshow }}"
+  round
+  position="bottom"
+  custom-style="height: 45%"
+  bind:close="onClose"  
+>
+    <van-datetime-picker
+    type="date"
+    value="{{ currentDate }}"
+    bind:input="onInput"
+    formatter="{{ formatter }}"
+    bind:input="onInput"
+    bind:confirm="onConfirm"
+    bind:cancel="onClose"
+    />
+</van-popup>
+
+

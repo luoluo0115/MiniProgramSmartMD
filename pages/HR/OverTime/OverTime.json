@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "auth": "../../../components/auth/auth"
+  },
+  "navigationBarTitleText": "加班申请",
+  "enablePullDownRefresh": true
+}

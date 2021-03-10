@@ -1,0 +1,98 @@
+<van-tabs active="{{ active }}" bind:change="switchTab"  sticky>
+	<van-tab title="业务咨询客户修改">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+                <view>
+                    <van-cell-group>
+                        <van-cell title="进入日期" value="{{consultList.customer_date}}"  />
+                        <van-cell title="公司名称" value="{{consultList.customer_name}}"  />
+                        <van-cell title="联系电话" value="{{consultList.contact_phone}}"  />
+                        <van-cell title="咨询内容" value="{{consultList.consult_content}}" />   
+                        <van-cell title="客户分类" required value="{{consultList.customer_category}}" is-link bind:click="onSelectDDL" data-type="customer_category"/>                                               
+                        <van-cell title="招商来源" required value="{{consultList.attract_investment_source}}" is-link bind:click="onSelectDDL" data-type="attract_investment_source"/>
+                        <van-cell title="客户来源" required value="{{consultList.customer_source}}" is-link bind:click="onSelectDDL" data-type="customer_source"/>                        
+                        <van-cell title="服务项目" required value="{{consultList.service_item_category}}" is-link bind:click="onSelectDDL" data-type="service_item_category"/>                 
+                        <van-row custom-class="pd-16">
+                            <van-col required span="12" custom-class="c-333 font-28">是否有效</van-col>
+                            <van-col span="12" custom-class="t-right">
+                                <van-switch checked="{{ consultList.enabled }}" bind:change="onChangeSwitch" size="20px" custom-class=""/>
+                            </van-col>
+                        </van-row>
+                        <van-field
+                        value="{{ consultList.change_reason }}"
+                        input-align="right"
+                        label="修改理由"
+                        type="textarea"
+                        required
+                        clearable
+                        placeholder="请输入修改理由"
+                        autosize         
+                        show-word-limit="{{true}}"
+                        maxlength="200"
+                        autosize="{ maxHeight: 250, minHeight: 150 }"
+                        data-fieldName="change_reason"            
+                        bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{ consultList.remark }}"
+                            label="备注"
+                            clearable
+                            placeholder="请输入备注"
+                            size="small"
+                            input-align="right"
+                            data-fieldName="remark"            
+                            bind:input="handleFieldChange"
+                        />                        
+                    </van-cell-group>
+                    <view class="container-btn">
+                    <van-button type="primary" block size="normall"  bindtap="bindSave" color="#198fff">保存提交</van-button>
+                    </view>
+                </view>
+			</view>
+		</view>
+	</van-tab>
+	<van-tab title="业务咨询修改历史">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+        <van-sticky>           
+          <view class="hr"></view>
+          <block wx:if="{{editHistoryList!=''}}">
+              <van-row custom-class="work-list font-24 c-666 container" wx:for="{{editHistoryList}}" wx:key="index">
+                  <van-col span="12">申请用户姓名:{{item.apply_user_name}}</van-col>
+                  <van-col span="12">创建日期:{{item.creation_date}}</van-col>
+                  <van-col span="12">修改日期:{{item.update_date}}</van-col>
+                  <van-col span="12">状态:<van-tag plain type="primary">{{item.status_desc}}</van-tag></van-col>            
+                  <van-col span="24">修改理由:{{item.change_reason}}</van-col>                  
+                  <van-col span="24">备注:{{item.remark}}</van-col>
+
+                  <van-col span="12">招商来源修改之前:{{item.attract_investment_source_cb}}</van-col>
+                  <van-col span="12">招商来源修改之后:<text class="{{(item.attract_investment_source_cb !=item.attract_investment_source_ca) ? 'color-red':''}}">{{item.attract_investment_source_ca}}</text></van-col>
+                  <van-col span="12">客户来源修改之前:{{item.customer_source_cb}}</van-col> 
+                  <van-col span="12">客户来源修改之后:<text class="{{(item.customer_source_cb !=item.customer_source_ca) ? 'color-red':''}}">{{item.customer_source_ca}}</text></van-col>
+                  <van-col span="12">客户分类修改之前:{{item.customer_category_cb}}</van-col>      
+                  <van-col span="12">客户分类修改之后:<text class="{{(item.customer_category_cb !=item.customer_category_ca) ? 'color-red':''}}">{{item.customer_category_ca}}</text></van-col>
+                  <van-col span="12">服务项目修改之前:{{item.service_item_category_cb}}</van-col>  
+                  <van-col span="12">服务项目修改之后:<text class="{{(item.service_item_category_cb !=item.service_item_category_ca) ? 'color-red':''}}">{{item.service_item_category_ca}}</text></van-col> 
+                  <van-col span="12">是否有效修改之前:{{item.enabled_cb_desc}}</van-col>   
+                  <van-col span="12">是否有效修改之后:<text class="{{(item.enabled_cb !=item.enabled_ca) ? 'color-red':''}}">{{item.enabled_ca_desc}}</text></van-col>                                                                                                                                                      
+              </van-row>
+          </block>
+          <block wx:else>
+              <view class="container t-center c-999">
+                  <icon class="iconfont/iconkong2:before font-172"></icon>
+                  <view class="font-28">{{msg}}</view>
+              </view>
+          </block>
+        </van-sticky>
+			</view>
+		</view>
+  </van-tab>  
+</van-tabs>
+
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />

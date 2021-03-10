@@ -1,0 +1,108 @@
+/* pages/WF/SingleSignBill/SingleSignBill.wxss */
+page {
+    background-color: #efefef;
+}
+.container{
+    padding: 20rpx 24rpx;
+}
+.pd{
+    padding: 34rpx 0px
+}
+.pd-12{
+    padding: 24rpx 0px
+}
+.work-list{
+    border-radius: 10rpx;
+    background-color: #fff;
+    margin: 20rpx 20rpx 0;
+    border-bottom: 0;
+}
+.center-title{
+    background-color: #f7f7f7;
+    color: #333;
+    padding:  15rpx;
+    border-top-left-radius: 15rpx;
+    border-top-right-radius: 15rpx;
+}
+.m-20{
+    margin: 20rpx
+}
+  
+.mt-20{
+    margin-top: 20rpx;
+}
+.step-list{
+    position: relative;
+}
+.circle-container {
+    position: absolute;
+    top: 38rpx;
+    left: 42rpx;
+    z-index: 2;
+    font-size: 24px;
+    line-height: 1;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.step-circle {
+    display: block;
+    width: 28rpx;
+    height: 28rpx;
+    /* background-color: #969799; */
+    border:1px solid #aaa;
+    border-radius: 50%;
+    font-size: 18rpx;
+    line-height: 28rpx;
+    text-align: center;
+    color: #999;
+}
+.step-circle.active {
+    border:1px solid #198fff;
+    color: #198fff;
+}
+.step-line {
+    top: 70rpx;
+    left: 42rpx;
+    width: 2rpx;
+    height: 100%;
+    position: absolute;
+    background-color: #eee;
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}
+.step-line.active {
+    background-color: #198fff;
+}
+.step-list:last-child .step-line {
+    display: none;
+}
+.row-table{
+    display: table;
+}
+.row-table .theader,.row-table .tr{
+    display: table-row;
+}
+.row-table .th{
+    background-color: #efefef;
+    border-right: 1px solid #ddd;
+    display: table-cell;
+    padding: 0 10rpx;
+}
+.row-table .td{
+    display: table-cell;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    font-size: 22rpx;
+    padding: 0 10rpx;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.row-table .th:first-child{
+    border-left: 1px solid #ddd;
+}
+
+.row-table .td:first-child{
+    border-left: 1px solid #eee;
+}
+
+

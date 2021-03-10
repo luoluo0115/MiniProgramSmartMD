@@ -1,0 +1,134 @@
+/* pages/HR/empDailyCard/empDailyCard.wxss */
+.calendar_title{width: 100%; margin: 0rpx auto; padding: 2rpx 0; justify-content: space-between;font-size: 48rpx;color: #fff;background-color: #198fff;}
+.calendar_title .icon image{width: 60rpx; height: 60rpx;margin: 5rpx auto;}
+
+/* 日历 */
+.calendar{width: 100%;margin-top: 0rpx;background: #fff;border-bottom-right-radius: 20rpx;border-bottom-left-radius: 20rpx;padding: 0 0 20rpx;font-family: FZZhunYuan-M02S;}
+.header{font-size: 0;margin: 0 auto;}
+.header>view{display: inline-block;width: 14.285%;color: #666;font-size: 30rpx;text-align: center;border-bottom: 1px solid #D0D0D0;padding: 20rpx 0;}
+.weekMark{position: relative;margin: 0 auto;}
+.weekMark view{position: absolute;bottom: 0;left: 0;width: 100%;border-bottom: 2px solid #69f;}
+.date-box{font-size: 0;padding: 20rpx 0;margin: 0 auto;}
+.date-box>view{position: relative;display: inline-block;width: 14.285%;color: #666;text-align: center;vertical-align: middle;}
+.date-head{height: 60rpx;line-height: 60rpx;font-size: 12pt;}
+.nowDay .date-head{width: 60rpx;border-radius: 50%;text-align: center;color: #fff;background-color: #198fff;margin: 0 auto;}
+
+/* 打卡 */
+.local-wrapper{
+    position: relative;
+    margin-top: -40rpx;
+    border-radius: 25rpx;
+    padding: 0rpx;
+
+}
+.circle{
+    margin: 20rpx auto;
+    border-radius: 50%;
+    width: 140rpx;
+    height: 140rpx;
+    background-image:linear-gradient(to right, #0377e4 , #198fff);
+    box-shadow: 1px 4px 14px #6ea9fc;
+    /* 宽度和高度需要相等 */
+}
+.minicircle{
+    background-color:#eee;
+    border-radius: 50%;
+    width: 120rpx;
+    height: 120rpx;
+    position: relative;
+    left: 10rpx;
+    top: 10rpx;
+    color: #0377e4;
+}
+.center-grid2{
+    top: -5rpx;
+    position: relative;
+    border-radius: 15rpx;
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 15rpx;
+    box-shadow: 0 6px 8px #ebedf0;
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+}
+.center-title{
+    background-color: #f7f7f7;
+    color: #333;
+    padding:  15rpx;
+    border-top-left-radius: 15rpx;
+    border-top-right-radius: 15rpx;
+}
+.filter{
+    line-height:2.2 ;
+    padding: 20rpx 24rpx 20rpx 0;
+}
+.icon-mt{
+    position: relative;
+    top: -9rpx;
+    height: 50rpx;
+    overflow: hidden;
+}
+.map_container{ 
+    height: 240rpx; 
+    width: 100%; 
+}
+.map { 
+    height: 100%; 
+    width: 100%; 
+}
+.address-content{
+    line-height:60rpx;
+    height: 60rpx;
+}
+
+
+ /* 打卡记录 */
+.container{
+    padding: 20rpx 24rpx;
+}
+.step-list{
+    position: relative;
+}
+.circle-container {
+    position: absolute;
+    top: 38rpx;
+    left: 42rpx;
+    z-index: 2;
+    font-size: 24px;
+    line-height: 1;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.step-circle {
+    display: block;
+    width: 28rpx;
+    height: 28rpx;
+    /* background-color: #969799; */
+    border:1px solid #aaa;
+    border-radius: 50%;
+    font-size: 18rpx;
+    line-height: 28rpx;
+    text-align: center;
+    color: #999;
+}
+.step-circle.active {
+    border:1px solid #198fff;
+    color: #198fff;
+}
+.step-line {
+    top: 70rpx;
+    left: 42rpx;
+    width: 2rpx;
+    height: 100%;
+    position: absolute;
+    background-color: #eee;
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}
+.step-line.active {
+    background-color: #198fff;
+}
+.step-list:last-child .step-line {
+    display: none;
+} 
+

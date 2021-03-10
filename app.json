@@ -1,0 +1,106 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/registred/registred",
+    "pages/me/index/index",
+    "pages/HR/index/index",
+    "pages/HR/OverTime/OverTime",
+    "pages/HR/OverTimeAdd/OverTimeAdd",
+    "pages/HR/OffDuty/OffDuty",
+    "pages/HR/OffDutyAdd/OffDutyAdd",
+    "pages/HR/empDailyCard/empDailyCard",
+    "pages/HR/CardLog/CardLog",
+    "pages/HR/PublicitySign/PublicitySign",    
+    "pages/WF/MySignBill/MySignBill",
+    "pages/WF/SingleSignBill/SingleSignBill",
+    "pages/business/consultReceive/consultReceive",
+    "pages/business/consultList/consultList",
+    "pages/business/consultAdd/consultAdd",
+    "pages/business/Test/Test",
+    "pages/business/consultSalesList/consultSalesList",
+    "pages/business/consultSalesAdd/consultSalesAdd",
+    "pages/business/consultSalesDetail/consultSalesDetail",
+    "pages/business/workLogAdd/workLogAdd",
+    "pages/business/contactAdd/contactAdd",
+    "pages/business/consultSalesEdit/consultSalesEdit",
+    "pages/business/consultDetail/consultDetail"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#198fff",
+    "navigationBarTitleText": "企汇大管家",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#8A96A2",
+    "selectedColor": "#198fff",
+    "backgroundColor": "#f9f9f9",
+    "borderStyle": "white",
+    "list": [
+      {
+        "selectedIconPath": "images/tabBar/work-act.png",
+        "iconPath": "images/tabBar/work.png",
+        "pagePath": "pages/HR/index/index",
+        "text": "工作台"
+      },
+      {
+        "selectedIconPath": "images/tabBar/note-act.png",
+        "iconPath": "images/tabBar/note.png",
+        "pagePath": "pages/WF/MySignBill/MySignBill",
+        "text": "签核"
+      },
+      {
+        "selectedIconPath": "images/tabBar/me-act.png",
+        "iconPath": "images/tabBar/me.png",
+        "pagePath": "pages/me/index/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "van-button": "./vant-weapp/dist/button/index",
+    "van-dialog": "./vant-weapp/dist/dialog/index",
+    "van-field": "./vant-weapp/dist/field/index",
+    "van-tag": "./vant-weapp/dist/tag/index",
+    "van-icon": "./vant-weapp/dist/icon/index",
+    "van-notify": "./vant-weapp/dist/notify/index",
+    "van-submit-bar": "./vant-weapp/dist/submit-bar/index",
+    "van-action-sheet": "./vant-weapp/dist/action-sheet/index",
+    "van-cell-group": "./vant-weapp/dist/cell-group/index",
+    "van-cell": "./vant-weapp/dist/cell/index",
+    "van-datetime-picker": "./vant-weapp/dist/datetime-picker/index",
+    "van-popup": "./vant-weapp/dist/popup/index",
+    "van-rate": "./vant-weapp/dist/rate/index",
+    "van-collapse": "./vant-weapp/dist/collapse/index",
+    "van-collapse-item": "./vant-weapp/dist/collapse-item/index",
+    "van-panel": "./vant-weapp/dist/panel/index",
+    "van-toast": "./vant-weapp/dist/toast/index",
+    "van-tab": "./vant-weapp/dist/tab/index",
+    "van-tabs": "./vant-weapp/dist/tabs/index",
+    "van-col": "./vant-weapp/dist/col/index",
+    "van-row": "./vant-weapp/dist/row/index",
+    "van-notice-bar": "./vant-weapp/dist/notice-bar/index",
+    "van-checkbox": "./vant-weapp/dist/checkbox/index",
+    "van-checkbox-group": "./vant-weapp/dist/checkbox-group/index",
+    "van-card": "./vant-weapp/dist/card/index",
+    "van-search": "./vant-weapp/dist/search/index",
+    "van-radio": "./vant-weapp/dist/radio/index",
+    "van-radio-group": "./vant-weapp/dist/radio-group/index",
+    "van-picker": "./vant-weapp/dist/picker/index",
+    "van-steps": "./vant-weapp/dist/steps/index",
+    "van-image": "./vant-weapp/dist/image/index",
+    "van-uploader": "./vant-weapp/dist/uploader/index",
+    "van-loading": "./vant-weapp/dist/loading/index",
+    "van-area": "./vant-weapp/dist/area/index",
+    "van-switch": "./vant-weapp/dist/switch/index",
+    "van-calendar": "./vant-weapp/dist/calendar/index"
+  },
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于考勤"
+    }
+  }
+}

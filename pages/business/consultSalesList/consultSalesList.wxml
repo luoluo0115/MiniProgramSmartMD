@@ -1,0 +1,61 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<van-sticky>
+    <view class="container">
+        <van-row gutter="5">
+            <van-col span="9">
+                <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="fTime">
+                    开始时间:{{date_start}}</van-button>
+            </van-col>
+            <van-col span="9">
+                <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="eTime">
+                    结束时间:{{date_end}}</van-button>
+            </van-col>
+            <van-col span="6">
+                <van-button block icon="add-o" color="#198fff" size="mini" bind:tap="Add">新增咨询</van-button>
+            </van-col>
+        </van-row>
+    </view>
+    <view class="hr"></view>
+    <block wx:if="{{salesList!=''}}">
+        <van-row custom-class="work-list font-24 c-666 container" wx:for="{{salesList}}" wx:key="index">
+            <van-col span="12">进入日期:{{filter.formatTime(item.customer_date,'yyyy-MM-dd')}}</van-col>
+            <van-col span="12">
+                客户状态:<van-tag plain type="primary">{{item.customer_status}}</van-tag>                                  
+            </van-col>
+            <van-col span="12">销售姓名:{{item.sales_name}}</van-col>
+            <van-col span="12">服务项目:{{item.service_item_category}}</van-col>
+            <van-col span="24">公司名称:{{item.customer_name}}</van-col>            
+            <van-col span="12">招商来源:{{item.attract_investment_source}}</van-col>
+            <van-col span="12">客户来源:{{item.customer_source}}</van-col>
+            <van-col span="12">客户分类:{{item.customer_category}}</van-col>
+            <van-col span="12">联系人名称:<block wx:if="{{(item.is_assigned=='Y' &&  item.is_accepted=='Y') ||  item.is_assigned=='W'}}">{{item.contact_name}}</block></van-col>  
+            <van-col span="12">联系人电话:<block wx:if="{{(item.is_assigned=='Y' &&  item.is_accepted=='Y') ||  item.is_assigned=='W'}}">{{item.contact_phone}}</block></van-col>
+            <van-col span="12">联系人微信:<block wx:if="{{(item.is_assigned=='Y' &&  item.is_accepted=='Y') ||  item.is_assigned=='W'}}">{{item.contact_wechat}}</block></van-col>                       
+            <van-col span="24">咨询内容:{{item.consult_content}}</van-col>             
+            <van-col span="24" custom-class="t-right mt-border">
+                <view class="mt">
+                    <van-button type="info" wx:if="{{(item.is_assigned=='Y' && item.is_accepted=='Y') || item.is_assigned=='W' }}" size="mini" round custom-class="ml" bindtap="Detail" data-item="{{item}}">详情
+                    </van-button>                 
+                    <van-button type="info" wx:if="{{(item.is_assigned=='Y' && item.is_accepted=='Y') || item.is_assigned=='W' }}" size="mini" round custom-class="ml" bindtap="Edit" data-item="{{item}}">修改信息
+                    </van-button>
+                    <van-button type="info" wx:if="{{item.is_assigned=='Y' && item.is_accepted=='N'}}" size="mini" round custom-class="ml" bindtap="accepted"
+                        data-pre_customer_info_id="{{item.pre_customer_info_id}}">接受</van-button>
+                </view>
+            </van-col>
+        </van-row>
+    </block>
+    <block wx:else>
+        <view class="container t-center c-999">
+            <icon class="iconfont/iconkong2:before font-172"></icon>
+            <view class="font-28">{{msg}}</view>
+        </view>
+    </block>
+</van-sticky>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />
+<van-popup show="{{ timeshow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-datetime-picker type="date" value="{{ currentDate }}" bind:input="onInput" formatter="{{ formatter }}"
+        bind:input="onInput" bind:confirm="onConfirm" bind:cancel="onClose" />
+</van-popup>

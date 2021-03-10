@@ -1,0 +1,140 @@
+<!--index.wxml-->
+<!-- <view class='container-login'>
+  <image class="containert-img" src="{{loginBg}}" mode="aspectFill" />
+  <view class='journey-container'>
+      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"  class="empower-btn" > 立即加入 </button>
+      <block wx:else>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+  </view>
+</view> -->
+<view class="container">
+  <view class="header  ">
+    <van-row custom-class="content">
+      <van-col span="12">
+        <view class="header-title font-32 c-fff ">
+          欢迎进入企汇管家系统
+        </view>
+        <!-- <view class="header-title font-20 c-fff  mb">
+          The Attendance System
+        </view> -->
+        <view class="header-title font-28 c-fff" style="margin-top: 32px;">
+          Hello.{{userInfo.nickName}}
+        </view>
+      </van-col>
+      <van-col span="12" custom-class="t-right" >
+            <van-image width="150" height="84" src="{{headerUrl}}" />
+      </van-col>
+    </van-row>
+    <!-- <van-row gutter="10" custom-class="c-fff t-center mt  mb">
+      <van-col span="6">
+        <view class="num font-36">3</view>
+        <view class="text font-28">消息通知</view>
+      </van-col>
+      <van-col span="6">
+        <view class="num font-36">13</view>
+        <view class="text font-28">待签核</view>
+      </van-col>
+      <van-col span="6">
+        <view class="num font-36">16</view>
+        <view class="text font-28">待接收咨询</view>
+      </van-col>
+      <van-col span="6">
+        <view class="num font-36">18</view>
+        <view class="text font-28">过期</view>
+      </van-col>
+    </van-row> -->
+  </view>
+  <view class="content" >
+       <van-row custom-class=" center-grid">
+            <van-col span="2">
+                <icon class="./iconfont/iconxiaoxi:before icon-notice " ></icon>
+            </van-col>
+            <van-col span="22" wx:if="{{messageList!=''}}">
+                <swiper  class='swiper-container' autoplay='true' vertical='true' circular='true' interval='2000'>
+                    <block   wx:for='{{messageList}}' wx:key="index" >
+                        <swiper-item>
+                            <view class='swiper-item'>{{item.message_title}}:{{item.message_content}}</view>
+                        </swiper-item>
+                    </block>
+                </swiper>
+                
+            </van-col>
+            <van-col wx:else >
+              <span class="swiper-container">
+                <span class='swiper-item'> {{msg}}</span>
+              </span>
+            </van-col>
+        </van-row>
+     
+  </view>
+  <view class="content ">
+    <view class="center-grid2 bg-fff">
+      <view class="center-title c-333 font-28">
+         人事管理
+      </view>
+      <van-row gutter="10" custom-class="t-center  c-2071FF mt font-28 mb ">
+        <van-col span="6" bindtap="goExtraWork">
+          <icon class="iconfont/iconhezu:before font-64"></icon>
+          <view class="">加班</view>
+        </van-col>
+        <van-col span="6" bindtap="goOffDuty">
+           <icon class="iconfont/iconxietong-huibao:before font-64"></icon>
+          <view>请假</view>
+        </van-col>
+        <van-col span="6" bindtap="goCardLog">
+           <icon class="iconfont/iconhuibaojifen:before font-64"></icon>
+          <view>公出签到</view>
+        </van-col>
+        <van-col span="6" bindtap="goEmpDailyCard">
+           <icon class="iconfont/iconricheng:before font-64"></icon>
+          <view>考勤</view>
+        </van-col>
+       
+      </van-row>
+    </view>
+  </view>
+  <!-- <view class="content mt20">
+    <view class="center-grid2 bg-fff">
+      <view class="center-title c-333 font-28">
+         业务咨询
+      </view>
+      <van-row gutter="10" custom-class="t-center  c-2071FF mt font-28 mb ">
+        <van-col span="6" bindtap="goConsultList">
+          <icon class="iconfont/iconhezu:before font-64"></icon>
+          <view class="">咨询线索</view>
+        </van-col>
+        <van-col span="6" bindtap="goConsultSalesList">
+           <icon class="iconfont/iconxietong-huibao:before font-64"></icon>
+          <view>业务咨询</view>
+        </van-col>
+        <van-col span="6" bindtap="goConsultRec">
+           <icon class="iconfont/iconhuibaojifen:before font-64"></icon>
+          <view>待接收咨询</view>
+        </van-col>
+        <van-col span="6" bindtap="goPageUrl" data-url="/pages/business/Test/Test">
+           <icon class="iconfont/iconhuibaojifen:before font-64"></icon>
+          <view>测试</view>
+        </van-col>
+        <van-col span="6" bindtap="goPageUrl" data-url="/pages/business/Test/Test">
+           <icon class="iconfont/iconhuibaojifen:before font-64"></icon>
+          <view>测试</view>
+        </van-col>                
+      </van-row>
+    </view>
+  </view> -->
+  <view class="content mt20" wx:for="{{menuList}}" wx:key="index">
+      <view class="center-grid2 bg-fff">
+        <view class="center-title c-333 font-28">
+          {{item.menu_name}}
+        </view>
+        <van-row gutter="10" custom-class="t-center  c-2071FF mt font-28 mb ">          
+          <van-col span="6" bindtap="goPageUrl" data-url="{{item.menu_url}}" wx:for="{{item.childDataList}}" wx:key="idx">
+            <icon class="{{item.button_class}}"></icon>
+            <view>{{item.menu_name}}</view>
+          </van-col>                        
+        </van-row>
+      </view>
+  </view>  
+</view>
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../pages/activity/rule/rule" ></auth>

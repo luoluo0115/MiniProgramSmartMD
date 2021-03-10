@@ -1,0 +1,61 @@
+/* pages/HR/CardLog/CardLog.wxss */
+page {
+    background-color: #f9f9f9;
+}
+.container{
+    padding: 20rpx 24rpx;
+}
+.pd{
+    padding: 34rpx 0px 84rpx
+}
+.pd-12{
+    padding: 24rpx 0px
+}
+.filter-icon{
+   
+}
+
+.local-wrapper{
+    position: relative;
+    margin-top: -40rpx;
+    border-radius: 25rpx;
+    padding: 20rpx;
+
+}
+.circle{
+    margin: 30rpx auto;
+    border-radius: 50%;
+    width: 280rpx;
+    height: 280rpx;
+    background-image:linear-gradient(to right, #0377e4 , #198fff);
+    box-shadow: 1px 4px 14px #6ea9fc;
+    /* 宽度和高度需要相等 */
+}
+.minicircle{
+    background-color:#eee;
+    border-radius: 50%;
+    width: 250rpx;
+    height: 250rpx;
+    position: relative;
+    left: 15rpx;
+    top: 15rpx;
+    color: #0377e4;
+}
+.center-grid2{
+    top: -5rpx;
+    position: relative;
+    border-radius: 15rpx;
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 15rpx;
+    box-shadow: 0 6px 8px #ebedf0;
+    margin-top: 30rpx;
+}
+.center-title{
+    background-color: #f7f7f7;
+    color: #333;
+    padding:  15rpx;
+    border-top-left-radius: 15rpx;
+    border-top-right-radius: 15rpx;
+}
+  

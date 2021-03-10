@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "auth": "../../../components/auth/auth"
+  },
+  "navigationBarTitleText": "签核中心",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 10
+}

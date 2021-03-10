@@ -1,0 +1,97 @@
+<wxs module="filter" src="../../../utils/money.wxs"></wxs>
+<van-sticky>
+    <view class="container">
+    <van-row gutter="5">
+        <van-col span="9" >
+            <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="fTime">开始:{{ftime}}</van-button>
+        </van-col>
+        <van-col span="9">
+            <van-button block color="#198fff" plain size="mini" bind:tap="selectedTime" data-time="eTime">结束:{{etime}}</van-button>
+        </van-col>
+         <van-col span="6">
+            <van-button block icon="add-o" color="#198fff" size="mini" bind:tap="Add">申请加班</van-button>
+        </van-col>
+    </van-row>
+    </view>
+     <view class="hr"></view>
+    <block wx:if="{{hrOverTimeList!=''}}">
+        <van-row custom-class="work-list font-24 c-666 container" wx:for="{{hrOverTimeList}}" wx:key="index">
+            <van-col span="12" >单据号码:{{item.bill_no}}</van-col>
+            <van-col span="12" >状态：<van-tag plain type="primary">{{item.status_desc}}</van-tag></van-col>  
+            <!-- <van-col span="12" custom-class="t-right d-l-block">状态：
+                <block wx:if="{{item.status=='N'}}">
+                    <text class="c-198fff">{{item.status_desc}}</text>
+                </block>
+                <block wx:elif="{{item.status=='S'}}">
+                    <text class=" c-999">{{item.status_desc}}</text>
+                </block>
+                <block wx:elif="{{item.status=='X'}}">
+                    <text class="c-999">{{item.status_desc}}</text>
+                </block>
+                <block wx:else>
+                    <text class="c-666">{{item.status_desc}}</text>
+                </block>
+            </van-col> -->
+            <van-col span="12" custom-class=" c-333 ">班次名称:{{item.duty_name}}</van-col>
+            <van-col span="12">日期类型:{{item.duty_type_name}}</van-col>
+            <van-col span="12">计划时数:{{item.plan_hours}}</van-col>
+            <van-col span="12">加班日期:{{filter.dateFormatStr(item.plan_date_fm)}}</van-col>
+            <van-col span="12">计划开始:{{item.plan_time_hh_fm }}:{{item.plan_time_mm_fm }}</van-col>
+            <van-col span="12">计划结束:{{item.plan_time_hh_to}}:{{item.plan_time_mm_to}}</van-col>
+            <van-col span="12">处理状态:{{item.process_flag_desc}}</van-col>
+            <van-col span="12">实际时数:{{item.act_hours}}</van-col>
+            <van-col span="12">实际开始:{{item.act_hh_fm }}:{{item.act_mm_fm }}</van-col>
+            <van-col span="12">实际结束:{{item.act_hh_to}}:{{item.act_mm_to}}</van-col>                  
+            <van-col span="24">原因:{{item.reason}}</van-col>            
+            <block wx:if="{{item.status=='S'}}">
+                <van-col span="24"  custom-class="t-right mt-border">
+                    <view class="mt">
+                        <van-button type="danger" size="mini"  plain round custom-class="ml" bindtap="Cancel"  data-billno="{{item.bill_no}}" data-overtimeid="{{item.over_time_id}}">取消签核</van-button>
+                    </view>
+                </van-col>
+            </block>
+            <block wx:if="{{item.status=='N' || item.status=='R' || item.status=='X'}}">
+                <van-col span="24"  custom-class="t-right mt-border">
+                    <view class="mt">
+                        <van-button color="#999" size="mini" round custom-class="ml" bindtap="Delete"  data-overtimeid="{{item.over_time_id}}">删除</van-button>
+                        <van-button type="info" size="mini" round custom-class="ml" bindtap="Updata" data-item="{{item}}" >修改</van-button>
+                        <van-button type="info" size="mini" round custom-class="ml" bindtap="Submit"  data-overtimeid="{{item.over_time_id}}">提交</van-button>
+                    </view>
+                </van-col>
+            </block>
+
+        </van-row>
+    </block>
+    <block wx:else>
+        <view class="container t-center c-999">
+            <icon class="iconfont/iconkong2:before font-172"></icon>
+            <view class="font-28">{{msg}}</view>
+        </view>
+        
+    </block>
+    
+</van-sticky>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />
+<van-popup
+  show="{{ timeshow }}"
+  round
+  position="bottom"
+  custom-style="height: 55%"
+  bind:close="onClose"
+  
+>
+    <van-datetime-picker
+    type="date"
+    value="{{ currentDate }}"
+    bind:input="onInput"
+    formatter="{{ formatter }}"
+    bind:input="onInput"
+    bind:confirm="onConfirm"
+    bind:cancel="onClose"
+    />
+</van-popup>
+
+

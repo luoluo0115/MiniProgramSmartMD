@@ -1,0 +1,32 @@
+<view class='container-login'>
+  <image class="containert-img" src="{{loginBg}}" mode="aspectFill" />
+  <view class='journey-container'>
+    <view class="weui-flex third">
+        <view class="weui-flex__item text-left">
+          <icon class="./iconfont/iconmagnifier:before" custom-class="icon-left"></icon>
+            随时查看个人考勤
+        </view>
+        <view class="weui-flex__item text-left">
+          <icon class="./iconfont/icon3dtouchqiandao:before" custom-class="icon-left"></icon>
+            加班请假公出单据维护
+        </view>
+      </view>
+      <view class="weui-flex third">
+        <view class="weui-flex__item text-left">
+          <icon class="./iconfont/iconqianhe:before" custom-class="icon-left"></icon>
+            个人签核单据在线处理
+        </view>
+        <view class="weui-flex__item text-left">
+          <icon class="./iconfont/iconiconfontgantanhao4:before" custom-class="icon-left"></icon>
+            仅限企汇内部员工使用
+        </view>
+      </view>
+      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="empower-btn" > 立即使用 </button>
+      <block wx:else>
+        <text bindtap="bindViewTap" class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>      
+      <view class="sub">进入企汇大管家</view>     
+  </view>
+</view>
+<van-dialog id="van-dialog" />
+<van-toast id="van-toast" />

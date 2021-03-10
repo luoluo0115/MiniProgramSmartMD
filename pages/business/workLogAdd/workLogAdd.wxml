@@ -1,0 +1,46 @@
+<view>
+    <van-cell-group>
+        <van-cell title="客户状态" required value="{{workLogList.customer_status}}" is-link bind:click="onSelectDDL" data-type="customer_status"/>
+         
+        <van-cell title="订单号"   required wx:if="{{workLogList.customer_status =='成交' }}" value="{{workLogList.order_no}}" is-link bind:click="onSelectDDL" data-type="order_master_id"/>
+        <van-cell title="服务项目" required wx:if="{{workLogList.customer_status =='成交' }}" value="{{workLogList.service_item_category}}" is-link bind:click="onSelectDDL" data-type="service_item_category"/>
+        <van-cell title="客户理由" required wx:if="{{workLogList.customer_status =='放弃' }}" value="{{workLogList.customer_reason}}" is-link bind:click="onSelectDDL" data-type="customer_reason"/>        
+        <van-field
+        value="{{ workLogList.work_log }}"
+        input-align="right"
+        label="工作日志"
+        type="textarea"
+        required
+        clearable
+        placeholder="请输入工作日志"
+        autosize         
+        show-word-limit="{{true}}"
+        maxlength="200"
+        autosize="{ maxHeight: 250, minHeight: 150 }"
+        data-fieldName="work_log"            
+        bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ workLogList.remark }}"
+            label="备注"
+            clearable
+            placeholder="请输入备注"
+            size="small"
+            input-align="right"
+            data-fieldName="remark"            
+            bind:input="handleFieldChange"
+        />         
+    </van-cell-group>
+    <view class="container-btn">
+     <van-button type="primary" block size="normall"  bindtap="bindSave" color="#198fff">保存</van-button>
+    </view>
+</view>
+
+<!-- 下拉框弹出层 -->
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />

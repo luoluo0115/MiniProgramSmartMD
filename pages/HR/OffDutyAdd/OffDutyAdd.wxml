@@ -1,0 +1,138 @@
+<view>
+    <van-cell-group>
+        <van-cell title="假别" required value="{{hrOffDutyList.absent_name}}" is-link bind:click="onSelect" data-type="codeName"/>
+        <van-cell title="代理人" required value="{{hrOffDutyList.agent_emp_name}}" is-link bind:click="onSelect" data-type="empName" />
+        <van-cell title="请假开始日期" required value="{{hrOffDutyList.plan_date_fm}}" size="small" bind:click="onSelectTime" data-time="fm" is-link/>
+        <van-cell required wx:if="{{hrOffDutyList.absent_code!='I'}}" title="请假开始时间" value="{{amTime}}" size="small" bind:click="onSelectTime"  data-time="am" is-link/>
+        <van-field required wx:if="{{hrOffDutyList.absent_code=='I'}}"
+            label-class="c-333"
+            value="{{hrOffDutyList.plan_time_hh_fm}}"
+            input-align="right"
+            type="number"
+            required
+            clearable
+            label="开始时间(时)"
+            placeholder="入请假开始时间(时)"            
+            data-fieldName="plan_time_hh_fm"            
+            bind:input="handleFieldChange"
+        />
+        <van-field required wx:if="{{hrOffDutyList.absent_code=='I'}}"
+            label-class="c-333"
+            value="{{hrOffDutyList.plan_time_mm_fm}}"
+            input-align="right"
+            type="number"
+            required
+            clearable
+            label="开始时间(分)"
+            placeholder="请输入请假开始时间(分)"            
+            data-fieldName="plan_time_mm_fm"            
+            bind:input="handleFieldChange"
+        />
+        <van-cell required title="请假结束日期" value="{{hrOffDutyList.plan_date_to}}" size="small" bind:click="onSelectTime" data-time="to" is-link/>
+        <van-cell required wx:if="{{hrOffDutyList.absent_code!='I'}}" title="请假结束时间" value="{{pmTime}}" size="small" bind:click="onSelectTime"  data-time="pm" is-link/>
+        <van-field required wx:if="{{hrOffDutyList.absent_code=='I'}}"
+            label-class="c-333"
+            value="{{hrOffDutyList.plan_time_hh_to}}"
+            input-align="right"
+            type="number"
+            required
+            clearable
+            label="结束时间(时)"
+            placeholder="请输入请假结束时间(时)"            
+            data-fieldName="plan_time_hh_to"            
+            bind:input="handleFieldChange"
+        />
+        <van-field required wx:if="{{hrOffDutyList.absent_code=='I'}}"
+            label-class="c-333"
+            value="{{hrOffDutyList.plan_time_mm_to}}"
+            input-align="right"
+            type="number"
+            required
+            clearable
+            label="结束时间(分)"
+            placeholder="请输入请假结束时间(分)"            
+            data-fieldName="plan_time_mm_to"            
+            bind:input="handleFieldChange"
+        />
+        <van-cell title="请假时数" value="{{hrOffDutyList.plan_hours}}" />
+        <van-field
+          value="{{ hrOffDutyList.reason }}"
+          label="原因"
+          type="textarea"
+          placeholder="请输入请假原因"
+          autosize
+          required
+          input-align="right"
+          clearable          
+          data-fieldName="reason"            
+          bind:input="handleFieldChange"
+        />
+        <van-field
+          value="{{ hrOffDutyList.remark }}"
+          label="备注"
+          type="textarea"
+          placeholder="请输入请备注"
+          autosize
+          input-align="right"
+          clearable
+          data-fieldName="remark"            
+          bind:input="handleFieldChange"
+        />
+    </van-cell-group>
+    <view class="container-btn">
+     <van-button type="primary"  bindtap="onSubmit"  block size="small" color="#198fff">提交信息</van-button>
+    </view>
+</view>
+<van-toast id="van-toast" />
+
+<van-popup
+  show="{{ hhshow }}"
+  round
+  position="bottom"
+  custom-style="height: 55%"
+  bind:close="onClose"
+  
+>
+    <van-picker columns="{{ columnsHH }}"  show-toolbar  bind:confirm="onConfirmHH"
+    bind:cancel="onClose"/>
+</van-popup>
+<!-- 选择日期 -->
+<van-popup
+  show="{{ show }}"
+  round
+  position="bottom"
+  custom-style="height: 55%"
+  bind:close="onCancel"
+  
+>
+    <van-datetime-picker
+    type="date"
+    value="{{ currentDate }}"
+    min-date="{{ minDate }}"
+    formatter="{{ formatter }}"
+    bind:confirm="onConfirm"
+    bind:cancel="onCancel"
+    />
+</van-popup>
+<!-- 选择时间 -->
+<van-popup
+  show="{{ timeshow }}"
+  round
+  position="bottom"
+  custom-style="height: 45%"
+  bind:close="onCancel"
+>
+    <van-picker show-toolbar columns="{{ timeList }}"  show-toolbar  bind:confirm="onConfirmTime" bind:cancel="onCancel"
+    />
+</van-popup>
+<!-- 选择代理人 假别-->
+<van-popup
+  show="{{ nameshow }}"
+  round
+  position="bottom"
+  custom-style="height: 45%"
+  bind:close="onCancel"
+>
+   <van-picker  show-toolbar columns="{{ nameList }}"  default-index="0" bind:confirm="onName" bind:cancel="onCancel"/>
+</van-popup>
+

@@ -1,0 +1,11 @@
+
+<view class="pop-up" hidden='{{isHidden}}'>
+   <image src="{{bgImgPath}}" class="image"></image>
+    <view class="closebtn" bindtap='close'></view>
+   <button class='btn UserInfobtn' size="mini"  open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo"></button>
+
+   <view bindtap="gorule"  data-type="agreement" class="gorulebtn"></view>
+</view>
+
+
+<view class='mask' hidden='{{isHidden}}' catchtouchmove="true" bindtap='close'></view>

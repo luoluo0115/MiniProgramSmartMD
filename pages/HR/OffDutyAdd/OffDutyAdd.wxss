@@ -1,0 +1,5 @@
+/* pages/HR/OffDutyAdd/OffDutyAdd.wxss */
+
+.value-class {
+    flex: none !important;
+  }

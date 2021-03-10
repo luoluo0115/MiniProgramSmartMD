@@ -1,0 +1,88 @@
+/* pages/HR/PublicitySign/PublicitySign.wxss */
+.container{
+    padding: 20rpx 24rpx ;
+}
+
+.pd{
+    padding: 34rpx 0px
+}
+.pd-12{
+    padding: 24rpx 0px
+}
+.filter-icon{
+   
+}
+.filter{
+    line-height:2.2 ;
+    padding: 20rpx 24rpx 20rpx 0;
+}
+.icon-mt{
+    position: relative;
+    top: -9rpx;
+    height: 50rpx;
+    overflow: hidden;
+}
+.map_container{ 
+    height: 240rpx; 
+    width: 100%; 
+}
+.map { 
+    height: 100%; 
+    width: 100%; 
+}
+.address-content{
+    line-height:60rpx;
+    height: 60rpx;
+}
+/*筛选条件*/
+.container.date{
+    padding: 0rpx 24rpx 24rpx ;
+}
+.fixed-filter{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 99999;
+
+}
+
+.fixed-filter .filter-container{
+    
+    border-bottom: 1px solid #efefef;
+    border-bottom-left-radius: 25rpx;
+    border-bottom-right-radius: 25rpx;
+    
+}
+.fixed-filter .filter-scroll{
+    max-height: 420rpx;
+    overflow: hidden;
+}
+
+.fixed-filter .filter-time{
+    padding-left: 35rpx!important;
+    margin-top: 10rpx;
+}
+.fixed-filter .filter-check{
+    margin-top: 10rpx;
+}
+.fixed-filter .border-b{
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 10rpx;
+}
+.fixed-filter .btn-item{
+    margin-top: 10rpx;
+    margin-right: 15rpx;
+    padding: 5rpx 10rpx;
+    border: 1px solid #eee;
+    color: #666;
+
+}
+.filter-wrapper{
+    margin-top: 110rpx;
+    clear: both;
+    position: relative;
+}
+.filter-wrapper.date{
+    margin-top: 190rpx;
+}

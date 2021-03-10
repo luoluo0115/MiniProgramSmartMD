@@ -1,0 +1,116 @@
+<view>
+    <van-cell-group>
+        <van-cell title="客户进入日期" required value="{{consultList.customer_date}}" size="small" bind:click="onSelectDate"  is-link/>
+        <van-field
+            label-class="c-333"
+            value="{{consultList.customer_name}}"
+            input-align="right"
+            type="text"
+            required
+            clearable
+            label="公司名称"
+            placeholder="请输入公司名称"            
+            data-fieldName="customer_name"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{consultList.contact_name}}"
+            input-align="right"
+            type="text"
+            required
+            clearable
+            label="联系人名称"
+            placeholder="请输入联系人名称"            
+            data-fieldName="contact_name"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{consultList.contact_phone}}"
+            input-align="right"
+            type="number"
+            required
+            clearable
+            label="联系人电话"
+            placeholder="请输入联系人电话"            
+            data-fieldName="contact_phone"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{consultList.contact_wechat}}"
+            input-align="right"
+            type="text"            
+            clearable
+            label="联系人微信"
+            placeholder="请输入联系人微信"            
+            data-fieldName="contact_wechat"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{consultList.contact_mail}}"
+            input-align="right"
+            type="text"            
+            clearable
+            label="联系人邮箱"
+            placeholder="请输入联系人邮箱"            
+            data-fieldName="contact_mail"            
+            bind:input="handleFieldChange"
+        />
+        <van-cell title="招商来源" required value="{{consultList.attract_investment_source}}" is-link bind:click="onSelectDDL" data-type="attract_investment_source"/>
+        <van-cell title="客户来源" value="{{consultList.customer_source}}" is-link bind:click="onSelectDDL" data-type="customer_source"/>
+        <van-cell title="客户分类" required value="{{consultList.customer_category}}" is-link bind:click="onSelectDDL" data-type="customer_category"/>
+        <van-cell title="服务项目" required value="{{consultList.service_item_category}}" is-link bind:click="onSelectDDL" data-type="service_item_category"/>
+        <van-cell title="项目细分" value="{{consultList.detail_item_category}}" is-link bind:click="onSelectDDL" data-type="detail_item_category"/>
+        <van-cell title="再次细分" value="{{consultList.more_detail_item_category}}" is-link bind:click="onSelectDDL" data-type="more_detail_item_category"/>
+        <van-field
+        value="{{ consultList.consult_content }}"
+        input-align="right"
+        label="咨询内容"
+        type="textarea"
+        required
+        clearable
+        placeholder="请输入咨询内容"
+        autosize         
+        show-word-limit="{{true}}"
+        maxlength="200"
+        autosize="{ maxHeight: 250, minHeight: 150 }"
+        data-fieldName="consult_content"            
+        bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ consultList.remark }}"
+            label="备注"
+            clearable
+            placeholder="请输入备注"
+            size="small"
+            input-align="right"
+            data-fieldName="remark"            
+            bind:input="handleFieldChange"
+        />
+        <van-row custom-class="pd-16">
+            <van-col span="12" custom-class="c-333 font-28">是否有效</van-col>
+            <van-col span="12" custom-class="t-right">
+                <van-switch checked="{{ consultList.enabled }}" bind:change="onChangeSwitch" size="20px" custom-class=""/>
+            </van-col>
+        </van-row>
+    </van-cell-group>
+    <view class="container-btn">
+     <van-button type="primary" wx:if="{{consultList.is_editable=='N'}}" block size="normall"  bindtap="bindSave" color="#198fff">保存</van-button>
+    </view>
+</view>
+
+<van-popup show="{{ dateShow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-datetime-picker type="date" value="{{ currentDate }}"
+    min-date="{{ minDate }}" formatter="{{ formatter }}" bind:input="onChangeDate"
+    bind:confirm="onConfirmDate" bind:cancel="onClose" />
+</van-popup> 
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />

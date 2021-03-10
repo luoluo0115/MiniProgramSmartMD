@@ -1,0 +1,28 @@
+.list-content{
+  margin-top:1%;
+  font-size: 12px;
+}
+.list-content .list-title{
+  padding:2% 5%;
+  background: #f8f8f8;
+  color: #666666
+}
+.van-cell__title{
+  color: #333333!important;
+}
+.van-cell{
+  font-size: 12px!important;
+}
+.btn{
+  border: 1px solid #1e6ce8;
+  background-color: #1e6ce8;
+  color:#fff;  
+  display: block; 
+  text-align: center;  
+  margin: 40rpx auto;
+  width: 300rpx;
+  font-size: 24rpx;
+  height: 60rpx;
+  line-height: 60rpx; 
+  border-radius: 30rpx;
+}

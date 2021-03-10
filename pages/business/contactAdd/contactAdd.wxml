@@ -1,0 +1,153 @@
+<view>
+    <van-cell-group>
+       <van-field
+            label-class="c-333"
+            value="{{ contactList.name }}"
+            label="姓名"
+            required
+            clearable
+            placeholder="请输入姓名"
+            size="small"
+            input-align="right"
+            data-fieldName="name"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.mp }}"
+            label="手机"
+            required
+            clearable
+            placeholder="请输入手机"
+            size="small"
+            input-align="right"
+            data-fieldName="mp"            
+            bind:input="handleFieldChange"
+        /> 
+        <van-cell title="性别" required value="{{contactList.sex}}" is-link bind:click="onSelectDDL" data-type="sex"/>         
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.phone }}"
+            label="电话"
+            clearable
+            placeholder="请输入电话"
+            size="small"
+            input-align="right"
+            data-fieldName="phone"            
+            bind:input="handleFieldChange"
+        /> 
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.mail }}"
+            label="邮箱"
+            clearable
+            placeholder="请输入邮箱"
+            size="small"
+            input-align="right"
+            data-fieldName="mail"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.qq }}"
+            label="QQ"
+            clearable
+            placeholder="请输入QQ"
+            size="small"
+            input-align="right"
+            data-fieldName="qq"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.weibo }}"
+            label="微博"
+            clearable
+            placeholder="请输入微博"
+            size="small"
+            input-align="right"
+            data-fieldName="weibo"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.position }}"
+            label="职务"
+            clearable
+            placeholder="请输入职务"
+            size="small"
+            input-align="right"
+            data-fieldName="position"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.title }}"
+            label="称谓"
+            clearable
+            placeholder="请输入称谓"
+            size="small"
+            input-align="right"
+            data-fieldName="title"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.department }}"
+            label="部门"
+            clearable
+            placeholder="请输入部门"
+            size="small"
+            input-align="right"
+            data-fieldName="department"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.address }}"
+            label="地址"
+            clearable
+            placeholder="请输入地址"
+            size="small"
+            input-align="right"
+            data-fieldName="address"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+            label-class="c-333"
+            value="{{ contactList.wechat }}"
+            label="微信"
+            clearable
+            placeholder="请输入微信"
+            size="small"
+            input-align="right"
+            data-fieldName="wechat"            
+            bind:input="handleFieldChange"
+        />
+        <van-field
+        value="{{ contactList.remark }}"
+        input-align="right"
+        label="备注"
+        type="textarea"        
+        clearable
+        placeholder="请输入备注"
+        autosize         
+        show-word-limit="{{true}}"
+        maxlength="300"
+        autosize="{ maxHeight: 250, minHeight: 150 }"
+        data-fieldName="remark"            
+        bind:input="handleFieldChange"
+        />               
+    </van-cell-group>
+    <view class="container-btn">
+     <van-button type="primary" block size="normall"  bindtap="bindSave" color="#198fff">保存</van-button>
+    </view>
+</view>
+
+<!-- 下拉框弹出层 -->
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />

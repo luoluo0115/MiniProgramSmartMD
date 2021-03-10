@@ -1,0 +1,246 @@
+<van-tabs active="{{ active }}" bind:change="switchTab" color="#1e6ce8" type="card" sticky>
+	<van-tab title="明细">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+                <view class="hr mt"></view>
+                <view>
+                    <van-cell-group>
+                        <van-cell title="客户进入日期" required value="{{consultList.customer_date}}" size="small" bind:click="onSelectDate"  is-link/>
+                        <van-field
+                            label-class="c-333"
+                            value="{{consultList.customer_name}}"
+                            input-align="right"
+                            type="text"
+                            required
+                            clearable
+                            label="公司名称"
+                            placeholder="请输入公司名称"            
+                            data-fieldName="customer_name"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{consultList.contact_name}}"
+                            input-align="right"
+                            type="text"
+                            required
+                            clearable
+                            label="联系人名称"
+                            placeholder="请输入联系人名称"            
+                            data-fieldName="contact_name"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{consultList.contact_phone}}"
+                            input-align="right"
+                            type="number"
+                            required
+                            clearable
+                            label="联系人电话"
+                            placeholder="请输入联系人电话"            
+                            data-fieldName="contact_phone"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{consultList.contact_wechat}}"
+                            input-align="right"
+                            type="text"            
+                            clearable
+                            label="联系人微信"
+                            placeholder="请输入联系人微信"            
+                            data-fieldName="contact_wechat"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{consultList.contact_mail}}"
+                            input-align="right"
+                            type="text"            
+                            clearable
+                            label="联系人邮箱"
+                            placeholder="请输入联系人邮箱"            
+                            data-fieldName="contact_mail"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-cell title="招商来源" required value="{{consultList.attract_investment_source}}" is-link bind:click="onSelectDDL" data-type="attract_investment_source"/>
+                        <van-cell title="客户来源" value="{{consultList.customer_source}}" is-link bind:click="onSelectDDL" data-type="customer_source"/>
+                        <van-cell title="客户分类" required value="{{consultList.customer_category}}" is-link bind:click="onSelectDDL" data-type="customer_category"/>
+                        <van-cell title="服务项目" required value="{{consultList.service_item_category}}" is-link bind:click="onSelectDDL" data-type="service_item_category"/>
+                        <van-cell title="项目细分" value="{{consultList.detail_item_category}}" is-link bind:click="onSelectDDL" data-type="detail_item_category"/>
+                        <van-cell title="再次细分" value="{{consultList.more_detail_item_category}}" is-link bind:click="onSelectDDL" data-type="more_detail_item_category"/>                        
+                        <van-field
+                        value="{{ consultList.consult_content }}"
+                        input-align="right"
+                        label="咨询内容"
+                        type="textarea"
+                        required
+                        clearable
+                        placeholder="请输入咨询内容"
+                        autosize         
+                        show-word-limit="{{true}}"
+                        maxlength="200"
+                        autosize="{ maxHeight: 250, minHeight: 150 }"
+                        data-fieldName="consult_content"            
+                        bind:input="handleFieldChange"
+                        />
+                        <van-field
+                            label-class="c-333"
+                            value="{{ consultList.remark }}"
+                            label="备注"
+                            clearable
+                            placeholder="请输入备注"
+                            size="small"
+                            input-align="right"
+                            data-fieldName="remark"            
+                            bind:input="handleFieldChange"
+                        />
+                        <van-row custom-class="pd-16">
+                            <van-col span="12" custom-class="c-333 font-28">是否有效</van-col>
+                            <van-col span="12" custom-class="t-right">
+                                <van-switch checked="{{ consultList.enabled }}" bind:change="onChangeSwitch" size="20px" custom-class=""/>
+                            </van-col>
+                        </van-row>
+                    </van-cell-group>
+                    <view class="container-btn">
+                    <!-- <van-button type="primary" wx:if="{{consultList.is_editable=='N'}}" block size="normall"  bindtap="bindSave" color="#198fff">保存</van-button> -->
+                    </view>
+                </view>
+			</view>
+		</view>
+	</van-tab>
+	<van-tab title="联系人">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+        <van-sticky>
+          <!-- <view class="container">
+              <van-row gutter="5">                  
+                  <van-col span="9">
+                      <van-button wx:if="{{consultList.sales_name == user_name}}" block icon="add-o" color="#198fff" size="mini" bind:tap="AddContact">新增业务客户联系人</van-button>
+                  </van-col>
+              </van-row>
+          </view> -->
+          <view class="hr mt"></view>
+          <block wx:if="{{contactList!=''}}">
+              <van-row custom-class="work-list font-24 c-666 container" wx:for="{{contactList}}" wx:key="index">
+                  <van-col span="12">姓名:{{item.name}}</van-col>
+                  <van-col span="12">手机:{{item.mp}}</van-col>
+                  <van-col span="12">职务:{{item.position}}</van-col>
+                  <van-col span="12">电话:{{item.phone}}</van-col>
+                  <van-col span="12">邮箱:{{item.mail}}</van-col>            
+                  <van-col span="12">微信:{{item.wechat}}</van-col>            
+                  <van-col span="12">QQ:{{item.qq}}</van-col>
+                  <van-col span="12">微博:{{item.weibo}}</van-col>                                   
+                  <van-col span="12">性别:{{item.sex}}</van-col>             
+                  <van-col span="12">称谓:{{item.title}}</van-col>  
+                  <van-col span="12">部门:{{item.department}}</van-col>
+                  <van-col span="12">地址:{{item.address}}</van-col>
+                  <van-col span="24">备注:{{item.remark}}</van-col>        
+                  <van-col span="24" custom-class="t-right mt-border">
+                      <!-- <view class="mt" wx:if="{{consultList.sales_name==user_name && consultList.is_from_public_sea!='Y'}}">                                         
+                          <van-button type="info" size="mini" round custom-class="ml" bindtap="EditContact" data-item="{{item}}">编辑</van-button>
+                          <van-button type="info" size="mini" round custom-class="ml" bindtap="deleteContact"
+                              data-pre_customer_contact_id="{{item.pre_customer_contact_id}}">删除</van-button>
+                      </view> -->
+                  </van-col>
+              </van-row>
+          </block>
+          <block wx:else>
+              <view class="container t-center c-999">
+                  <icon class="iconfont/iconkong2:before font-172"></icon>
+                  <view class="font-28">{{msg}}</view>
+              </view>
+          </block>
+        </van-sticky>
+			</view>
+		</view>
+  </van-tab>
+  <van-tab title="修改历史">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+        <van-sticky>           
+          <view class="hr mt"></view>
+          <block wx:if="{{contactHistoryList!=''}}">
+              <van-row custom-class="work-list font-24 c-666 container" wx:for="{{contactHistoryList}}" wx:key="index">
+                  <van-col span="12">姓名:{{item.name}}</van-col>
+                  <van-col span="12">手机:{{item.mp}}</van-col>
+                  <van-col span="12">职务:{{item.position}}</van-col>
+                  <van-col span="12">电话:{{item.phone}}</van-col>
+                  <van-col span="12">邮箱:{{item.mail}}</van-col>            
+                  <van-col span="12">QQ:{{item.qq}}</van-col>
+                  <van-col span="12">微博:{{item.weibo}}</van-col>                                   
+                  <van-col span="12">性别:{{item.sex}}</van-col>             
+                  <van-col span="12">称谓:{{item.title}}</van-col>  
+                  <van-col span="12">部门:{{item.department}}</van-col>
+                  <van-col span="12">地址:{{item.address}}</van-col>
+                  <van-col span="24">备注:{{item.remark}}</van-col>                   
+              </van-row>
+          </block>
+          <block wx:else>
+              <view class="container t-center c-999">
+                  <icon class="iconfont/iconkong2:before font-172"></icon>
+                  <view class="font-28">{{msg}}</view>
+              </view>
+          </block>
+        </van-sticky>
+			</view>
+		</view>
+  </van-tab>
+  <van-tab title="跟进记录">
+		<view class="page area-container center-container">
+			<view class="invoice page__bd page__bd_spacing">
+        <van-sticky>
+          <!-- <view class="container">
+              <van-row gutter="5">                  
+                  <van-col span="6">
+                      <van-button block icon="add-o" color="#198fff" size="mini" bind:tap="AddWorkLog">新增跟进记录</van-button>
+                  </van-col>
+              </van-row>
+          </view> -->
+          <view class="hr mt"></view>
+          <block wx:if="{{workLogList!=''}}">
+              <van-row custom-class="work-list font-24 c-666 container" wx:for="{{workLogList}}" wx:key="index">
+                  <van-col span="12">销售姓名:{{item.sales_name}}</van-col>
+                  <van-col span="12">客户状态:<van-tag plain type="primary">{{item.customer_status}}</van-tag></van-col>
+                  <van-col span="12">订单号:{{item.order_no}}</van-col>
+                  <van-col span="12">服务项目:{{item.service_item_category}}</van-col>
+                  <van-col span="24">是否从公海获取:{{item.is_from_public_sea=='Y'?'是':'否'}}</van-col>            
+                  <van-col span="12">日志分类:{{item.worklog_category}}</van-col>
+                  <van-col span="12">创建时间:{{item.creation_date}}</van-col>                                   
+                  <van-col span="24">工作日志:{{item.work_log}}</van-col>             
+                  <van-col span="24">备注:{{item.remark}}</van-col>  
+                  <van-col span="24" custom-class="t-right mt-border">
+                      <!-- <view class="mt" wx:if="{{item.is_Editable=='N'}}">                                         
+                          <van-button type="info" size="mini" round custom-class="ml" bindtap="EditWorkLog" data-item="{{item}}">编辑
+                          </van-button>
+                          <van-button type="info" size="mini" round custom-class="ml" bindtap="deleteWorkLog"
+                              data-sales_worklog_id="{{item.sales_worklog_id}}">删除</van-button>
+                      </view> -->
+                  </van-col>
+              </van-row>
+          </block>
+          <block wx:else>
+              <view class="container t-center c-999">
+                  <icon class="iconfont/iconkong2:before font-172"></icon>
+                  <view class="font-28">{{msg}}</view>
+              </view>
+          </block>
+        </van-sticky>
+			</view>
+		</view>
+	</van-tab>
+</van-tabs>
+
+<van-popup show="{{ dateShow }}" round position="bottom" custom-style="height: 55%" bind:close="onClose">
+    <van-datetime-picker type="date" value="{{ currentDate }}"
+    min-date="{{ minDate }}" formatter="{{ formatter }}" bind:input="onChangeDate"
+    bind:confirm="onConfirmDate" bind:cancel="onClose" />
+</van-popup> 
+<van-popup show="{{ DDLShow }}" round position="bottom" custom-style="height: 45%" bind:close="onClose">
+   <van-picker  show-toolbar columns="{{ DDLList}}"  default-index="0" bind:confirm="onConfirmDDL" bind:cancel="onCancelDDL"/>
+</van-popup>
+
+<auth is-hidden="{{isHidden}}" bind:afterAuth="afterAuth" url="../../../pages/activity/rule/rule"></auth>
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" />

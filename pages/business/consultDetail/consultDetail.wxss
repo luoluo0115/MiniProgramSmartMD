@@ -1,0 +1,15 @@
+.van-tabs__line {
+  background-color: #1e6ce8 !important;
+}
+.van-tabs__wrap{
+  padding-top: 15rpx;
+}
+.container{
+  padding: 20rpx 24rpx;
+}
+.pd{
+  padding: 34rpx 0px
+}
+.pd-12{
+  padding: 24rpx 0px
+}
